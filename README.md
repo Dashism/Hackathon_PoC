@@ -4,7 +4,7 @@
 * [The Architecture](#the-architecture)
 * [Terms](#terms)
 * [Prerequisites](#prerequisites)
-* [Setting Up](#settings-up)
+* [Setting Up](#setting-up)
 * [Configuring Docker Services](#configuring-docker-services)
 * [Configuring the scripts](#configuring-the-scripts)
 

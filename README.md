@@ -1,12 +1,12 @@
 # Hackathon_PoC
 
 ## Table of contents
-* [The Architecture]
-* [Terms]
-* [Prerequisites]
-* [Setting Up]
-* [Configuring Docker Services]
-* [Configuring the scripts]
+* [The Architecture](#the-architecture)
+* [Terms](#terms)
+* [Prerequisites](#prerequisites)
+* [Setting Up](#settings-up)
+* [Configuring Docker Services](#configuring-docker-services)
+* [Configuring the scripts](#configuring-the-scripts)
 
 ## The Architecture
 Hyperledger Fabric has a set of components each with its own roles and functionalities. Each of these will be running on it’s own Docker instances and are configured to work together. These Docker instances even when running on multiple physical machines, can still communicate with each other. That’s essentially the crux of how a blockchain runs on several physical machines.
@@ -117,6 +117,6 @@ And in the second machine there are two services running.
 
 When you notice the logs, the peers syncs whenever you create asset of submit transactions. The peer0 will be getting the first transaction submit request and then the orderer distributes to other peers maintaining all the peers in sync.
 
-This readme is a copy of [Sites Using React](https://www.skcript.com/svr/setting-up-a-blockchain-business-network-with-hyperledger-fabric-and-composer-running-in-multiple-physical-machine/)
+This readme is a copy of this [link](https://www.skcript.com/svr/setting-up-a-blockchain-business-network-with-hyperledger-fabric-and-composer-running-in-multiple-physical-machine/).
 
-The reference source code : [Sites Using React](https://github.com/varun-raj/fabric-dev-servers-multipeer)
+The reference source code : [link](https://github.com/varun-raj/fabric-dev-servers-multipeer).

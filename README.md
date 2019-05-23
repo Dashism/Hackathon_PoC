@@ -101,6 +101,8 @@ That’s it, everything is set and ready to go. Now lets run the following scrip
 $ ./teardownFabric.sh && ./startFabric.sh && ./createPeerAdminCard.sh
 ```
 
+Run the following command on the second machine :
+
 ```
 $ ./startFabric-Peer2.sh
 ```

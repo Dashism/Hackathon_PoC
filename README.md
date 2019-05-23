@@ -34,7 +34,7 @@ In this example, we’ll be having 1 CA, 1 Orderer, and 3 Peers. With 2 Peers ru
 ## Setting Up
 Since all the components are running inside individual Docker instances, we can easily configure them to run separately.
 
-In this example, I’ll be taking the fabric-dev-server and modify it to run on multiple machines. This is mainly focused towards easier understanding and to use it like a boilerplate.
+In this example, I’ll be taking the [fabric-dev-server](https://raw.githubusercontent.com/hyperledger/composer-tools/master/packages/fabric-dev-servers/fabric-dev-servers.tar.gz) and modify it to run on multiple machines. This is mainly focused towards easier understanding and to use it like a boilerplate.
 
 Here since we’re using only the hlfv1 we’re removing the hlfv11 folder and bringing all the contents of hlfv1 outside.
 

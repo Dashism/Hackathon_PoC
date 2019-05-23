@@ -22,8 +22,6 @@ ARCH=`uname -m`
 # Grab the current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-#
-
 # ARCH=$ARCH docker-compose -f "${DIR}"/composer/docker-compose-peer2.yml down
 ARCH=$ARCH docker-compose -f "${DIR}"/composer/docker-compose-peer2.yml up -d
 

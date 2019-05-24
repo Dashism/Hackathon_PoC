@@ -16,14 +16,14 @@ fi
 # Exit on first error, print all commands.
 set -ev
 
-#Detect architecture
-ARCH=`uname -m`
+# Set VERSION
+VERSION=latest
 
 # Grab the current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# ARCH=$ARCH docker-compose -f "${DIR}"/composer/docker-compose-peer2.yml down
-ARCH=$ARCH docker-compose -f "${DIR}"/composer/docker-compose-peer2.yml up -d
+# VERSION=$VERSION docker-compose -f "${DIR}"/composer/docker-compose-peer2.yml down
+VERSION=$VERSION docker-compose -f "${DIR}"/composer/docker-compose-peer2.yml up -d
 
 # wait for Hyperledger Fabric to start
 # incase of errors when running later commands, issue export FABRIC_START_TIMEOUT=<larger number>

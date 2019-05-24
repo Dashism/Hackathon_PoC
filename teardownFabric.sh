@@ -3,15 +3,15 @@
 # Exit on first error, print all commands.
 set -ev
 
-#Detect architecture
-ARCH=`uname -m`
+# Set VERSION
+VERSION=latest
 
 # Grab the current directory.
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Shut down the Docker containers for the system tests.
 cd "${DIR}"/composer
-ARCH=$ARCH docker-compose -f docker-compose.yml kill && docker-compose -f docker-compose.yml down
+VERSION=$VERSION docker-compose -f docker-compose.yml kill && docker-compose -f docker-compose.yml down
 
 # remove the local state
 rm -fr ~/.composer

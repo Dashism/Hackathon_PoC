@@ -28,7 +28,7 @@ In this example, we’ll be having 1 CA, 1 Orderer, and 3 Peers. With 2 Peers ru
 ## Prerequisites
 * Install Docker
 * Install Composer
-* Install Fabric Images (1.0.4)
+* Install Fabric Images
 * Install Fabric Tools
 
 ## Setting Up

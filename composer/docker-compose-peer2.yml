@@ -3,7 +3,7 @@ version: '2'
 services:
   peer2.org1.example.com:
     container_name: peer2.org1.example.com
-    image: hyperledger/fabric-peer:$ARCH-1.0.4
+    image: hyperledger/fabric-peer:$VERSION
     environment:
       - CORE_LOGGING_PEER=debug
       - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
@@ -30,7 +30,7 @@ services:
 
   couchdb2:
     container_name: couchdb2
-    image: hyperledger/fabric-couchdb:$ARCH-1.0.4
+    image: hyperledger/fabric-couchdb:$VERSION
     ports:
       - 7984:5984
     environment:

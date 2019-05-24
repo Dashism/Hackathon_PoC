@@ -50,7 +50,9 @@ cat << EOF > /tmp/.connection.json
 }
 EOF
 
-PRIVATE_KEY="${DIR}"/composer/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/7fe58742a0b6d1102c74293808f1736dea010d3451f9e1a804c0b86ecf90baa0_sk
+
+PK_NAME=$(basename "${DIR}"/composer/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk)
+PRIVATE_KEY="${DIR}"/composer/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/"${PK_NAME}"
 CERT="${DIR}"/composer/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
 
 if composer card list -n PeerAdmin@hlfv1 > /dev/null; then

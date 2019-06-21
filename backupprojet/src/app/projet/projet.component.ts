@@ -19,46 +19,45 @@ import { User } from '../_models';
 })
 export class ProjetComponent implements OnInit, OnDestroy {
     router: Router;
-    form: FormGroup;
+    projectForm: any;
     formErrors: any;
     currentUser: User;
     currentUserSubscription: Subscription;
     private _unsubscribeAll: Subject<any>;
-    constructor(
-        private alertService: AlertService,
+
+    constructor(private alertService: AlertService,
         private userService: UserService,
         private authenticationService: AuthenticationService,
-        private _formBuilder: FormBuilder
-    ) {
-        this.openMenu();
+        public fb: FormBuilder) {
+        this.projectForm = this.fb.group({
+            'name': ['', Validators.required],
+            'description': ['', Validators.required],
+            'startdate': ['', Validators.required],
+            'enddate': ['', Validators.required],
+            'skillset': this.fb.array([this.initSkill()])
+        }),
+            this.openMenu();
         this.formErrors = {
             name: {},
             description: {},
             startdate: {},
             enddate: {},
             skillname: {},
-            skilllevel: {}
+            level: {}
         };
         this._unsubscribeAll = new Subject();
         this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
             this.currentUser = user;
         });
-    };
+    }
 
     ngOnInit() {
-        this.form = this._formBuilder.group({
-            name: ['', Validators.required],
-            description: ['', Validators.required],
-            startdate: ['', Validators.required],
-            enddate: ['', Validators.required],
-            skill: this._formBuilder.array([this.initSkill()])
-        });
-        this.form.valueChanges
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(() => {
-                this.onFormValuesChanged();
-            });
-        console.log(this.currentUser.id);
+        // this.form.valueChanges
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe(() => {
+        //         this.onFormValuesChanged();
+        //     });
+        // console.log(this.currentUser.id);
     }
 
     ngOnDestroy() {
@@ -67,24 +66,26 @@ export class ProjetComponent implements OnInit, OnDestroy {
     }
 
     initSkill() {
-        return this._formBuilder.group({
-            skillname: ['', Validators.required],
-            skilllevel: ['', Validators.pattern('[1-5]')]
+        return this.fb.group({
+            'skillname': ['', Validators.required],
+            'level': ['', Validators.required]
         });
     }
 
     addSkillForm() {
-        const control = <FormArray>this.form.controls['skill'];
+        const control = <FormArray>this.projectForm.controls['skillset'];
         control.push(this.initSkill());
     }
 
     addSkill() {
-            this.addSkillForm();
+        this.addSkillForm();
     }
 
     deleteSkill(index: number) {
-        // this.project.skillList.splice(index, 1);
-      }
+        const control = <FormArray>this.projectForm.controls['skillset'];
+        control.removeAt(index);
+        
+    }
 
     onFormValuesChanged(): void {
         for (const field in this.formErrors) {
@@ -94,7 +95,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
             // Clear previous errors
             this.formErrors[field] = {};
             // Get the control
-            const control = this.form.get(field);
+            const control = this.projectForm.get(field);
             if (control && control.dirty && !control.valid) {
                 this.formErrors[field] = control.errors;
             }
@@ -102,7 +103,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
     }
 
     // convenience getter for easy access to form fields
-    get f() { return this.form.controls; }
+    get f() { return this.projectForm.controls; }
 
     // onSubmit() {
     //     this.alertService.error('Enregistrement du projet dans la BlockChain reussi !', true);
@@ -120,6 +121,10 @@ export class ProjetComponent implements OnInit, OnDestroy {
 
     logout(): void {
         this.authenticationService.logout();
+    }
+
+    register(): void {
+        console.log("registred !!!");
     }
 }
 
@@ -150,4 +155,5 @@ function confirmPassword(control: AbstractControl): any {
             passwordsNotMatch: true
         };
     }
+
 }

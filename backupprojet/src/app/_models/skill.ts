@@ -3,6 +3,8 @@
  */
 
 export class Skill {
-    public name: string;
-    public level: number;
+    public username: string;
+    public skillname: string;
+    public level: string;
+    public grade: string;
 }

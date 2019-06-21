@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, NgModel, FormBuilder, Validators, FormArray, FormGroup, FormControl, FormArrayName } from '@angular/forms';
 import * as $ from 'jquery';
 
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -36,7 +36,8 @@ export class ProjetComponent implements OnInit, OnDestroy {
             description: {},
             startdate: {},
             enddate: {},
-            skill: {}
+            skillname: {},
+            skilllevel: {}
         };
         this._unsubscribeAll = new Subject();
         this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
@@ -50,7 +51,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
             description: ['', Validators.required],
             startdate: ['', Validators.required],
             enddate: ['', Validators.required],
-            skill: ['', Validators.required]
+            skill: this._formBuilder.array([this.initSkill()])
         });
         this.form.valueChanges
             .pipe(takeUntil(this._unsubscribeAll))
@@ -64,6 +65,26 @@ export class ProjetComponent implements OnInit, OnDestroy {
         // unsubscribe to ensure no memory leaks
         this.currentUserSubscription.unsubscribe();
     }
+
+    initSkill() {
+        return this._formBuilder.group({
+            skillname: ['', Validators.required],
+            skilllevel: ['', Validators.pattern('[1-5]')]
+        });
+    }
+
+    addSkillForm() {
+        const control = <FormArray>this.form.controls['skill'];
+        control.push(this.initSkill());
+    }
+
+    addSkill() {
+            this.addSkillForm();
+    }
+
+    deleteSkill(index: number) {
+        // this.project.skillList.splice(index, 1);
+      }
 
     onFormValuesChanged(): void {
         for (const field in this.formErrors) {
@@ -83,9 +104,9 @@ export class ProjetComponent implements OnInit, OnDestroy {
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
 
-    onSubmit() {
-        this.alertService.error('Enregistrement du projet dans la BlockChain reussi !', true);
-    }
+    // onSubmit() {
+    //     this.alertService.error('Enregistrement du projet dans la BlockChain reussi !', true);
+    // }
 
     openMenu() {
         $('body').removeClass('noScroll');

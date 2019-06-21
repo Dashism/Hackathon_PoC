@@ -149,7 +149,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                     if (this.f.username.value === 'Admin' && this.f.password.value === 'Admin') {
                         this.router.navigate(['/admin']);
                     } else {
-                        this.router.navigate(['/about']);
+                        this.router.navigate(['/profil']);
                     }
                 },
                 error => {

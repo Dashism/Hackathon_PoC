@@ -1,6 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as $ from 'jquery';
-import { AlertService, AuthenticationService } from '../_services';
+
+import { FuseConfigService } from '@fuse/services/config.service';
+import { fuseAnimations } from '@fuse/animations/index';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/internal/operators';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { first } from 'rxjs/operators';
+import { AlertService, UserService, AuthenticationService } from '../_services';
+import { User } from '../_models';
 
 
 @Component({
@@ -8,8 +18,9 @@ import { AlertService, AuthenticationService } from '../_services';
   templateUrl: './faq.component.html',
   styleUrls: ['./faq.component.scss']
 })
-export class FaqComponent {
-
+export class FaqComponent implements OnInit, OnDestroy {
+    currentUser: User;
+    currentUserSubscription: Subscription;
     faqsFiltered = [
         {
             'question': 'Proident tempor est nulla irure ad est?',
@@ -71,8 +82,19 @@ export class FaqComponent {
 
     constructor(private authenticationService: AuthenticationService) {
         this.openMenu();
+        this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
+            this.currentUser = user;
+        });
     }
 
+    ngOnInit() {
+
+    }
+
+    ngOnDestroy() {
+        // unsubscribe to ensure no memory leaks
+        this.currentUserSubscription.unsubscribe();
+    }
 
     openMenu(){
         $('body').removeClass('noScroll');

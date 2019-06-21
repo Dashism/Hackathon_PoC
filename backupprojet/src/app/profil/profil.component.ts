@@ -138,7 +138,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
             .pipe(first())
             .subscribe(
                 data => {
-                    this.alertService.success('Enregistrement de vos données personnelles reussites !', false);
+                    this.alertService.success('Enregistrement de vos données personnelles reussi !', false);
                 },
                 error => {
                     this.alertService.error(error);
@@ -157,7 +157,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
     }
 
     onSubmit2() {
-        this.alertService.error('Enregistrement de vos données BlockChain reussites !', false);
+        this.alertService.error('Enregistrement de vos données BlockChain reussi !', false);
     }
 
     openMenu() {

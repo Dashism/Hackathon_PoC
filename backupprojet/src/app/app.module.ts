@@ -4,7 +4,33 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatRippleModule } from '@angular/material';
+import {
+    MatRippleModule,
+    MatCardModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatGridListModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatSlideToggleModule,
+    ErrorStateMatcher,
+    ShowOnDirtyErrorStateMatcher,
+    MatListModule,
+    MatAccordion,
+    MatExpansionModule,
+    MatCheckboxModule,
+    MatTooltipModule
+} from '@angular/material';
 import { TranslateModule } from '@ngx-translate/core';
 import 'hammerjs';
 import { FuseModule } from '@fuse/fuse.module';
@@ -57,6 +83,10 @@ const appRoutes: Routes = [
         path: 'profil',
         component: ProfilComponent
         , canActivate: [AuthGuard]
+    },
+    {
+        path: 'shop',
+        component: ShopComponent
     },
     {
         path: 'projet',
@@ -130,8 +160,24 @@ const appRoutes: Routes = [
         SampleModule,
         ForgotPasswordModule,
         FaqModule,
-
-        ReactiveFormsModule
+        MatDatepickerModule,        // <----- import(must)
+        MatNativeDateModule,        // <----- import for date formating(optional)
+        MatMomentDateModule,
+        ReactiveFormsModule,
+        MatSnackBarModule,
+        MatGridListModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatMenuModule,
+        MatToolbarModule,
+        MatRadioModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatSlideToggleModule,
+        MatListModule,
+        MatExpansionModule,
+        MatCheckboxModule,
+        MatTooltipModule
 
     ],
     providers: [

@@ -19,13 +19,13 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a [routerLink]="['/']" class="smoothScroll">Acceuil</a></li>
-                <li><a [routerLink]="['/about']" class="smoothScroll">A propos</a></li>
-                <li><a [routerLink]="['/shop']" class="smoothScroll">Magasin</a></li>
-                <li><a [routerLink]="['/contact-us']" class="smoothScroll">Nous contacter</a></li>
+                <li><a [routerLink]="['/profil']" class="smoothScroll" *ngIf="currentUser">Profile</a></li>
+                <li><a [routerLink]="['/projet']" class="smoothScroll" *ngIf="currentUser">Projet</a></li>
+                <li><a [routerLink]="['/projetlist']" class="smoothScroll" *ngIf="currentUser">Suivi</a></li>
                 <li><a [routerLink]="['/help']" class="smoothScroll">Aide</a></li>
-                <li class="active"><a [routerLink]="['/login']" class="smoothScroll">Se connecter</a></li>
-                <li><a [routerLink]="['/register']" class="smoothScroll">S'enregistrer</a></li>
-                <li><a (click)="logout()" class="smoothScroll">Se déconnecter</a></li>
+                <li class="active"><a [routerLink]="['/login']" class="smoothScroll" *ngIf="!currentUser">Se connecter</a></li>
+                <li><a [routerLink]="['/register']" class="smoothScroll" *ngIf="!currentUser">S'enregistrer</a></li>
+                <li><a (click)="logout()" class="smoothScroll"*ngIf="currentUser">Se déconnecter</a></li>
             </ul>
         </div>
 

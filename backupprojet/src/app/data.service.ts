@@ -14,8 +14,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { throwError } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+
 
 @Injectable()
 export class DataService<Type> {
@@ -36,25 +38,25 @@ export class DataService<Type> {
             .catch(this.handleError);
     }
 
-    public get(ns: string, id: number): Observable<Type> {
+    public get(ns: string, id: string): Observable<Type> {
         return this.http.get(this.url + ns + '/' + id + this.resolveSuffix)
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    public add(ns: string, asset: Type): Observable<Type> {
-        return this.http.post(this.url + ns, asset)
+    public add(ns: string, itemToCreate: Type): Observable<Type> {
+        return this.http.post(this.url + ns, itemToCreate)
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    public update(ns: string, id: number, itemToUpdate: Type): Observable<Type> {
+    public update(ns: string, id: string, itemToUpdate: Type): Observable<Type> {
         return this.http.put(`${this.url}${ns}/${id}`, itemToUpdate)
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    public delete(ns: string, id: number): Observable<Type> {
+    public delete(ns: string, id: string): Observable<Type> {
         return this.http.delete(this.url + ns + '/' + id)
             .map(this.extractData)
             .catch(this.handleError);
@@ -64,11 +66,11 @@ export class DataService<Type> {
         const errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
 
-        return Observable.throw(errMsg);
+        return throwError(errMsg);
     }
 
     private extractData(res: Response): any {
-        return res.json();
+        return res;
     }
 
 }

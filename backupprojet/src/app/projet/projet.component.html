@@ -16,13 +16,14 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a [routerLink]="['/']" class="smoothScroll">Acceuil</a></li>
-                <li class="active"><a [routerLink]="['/about']" class="smoothScroll">A propos</a></li>
-                <li><a [routerLink]="['/shop']" class="smoothScroll">Magasin</a></li>
-                <li><a [routerLink]="['/contact-us']" class="smoothScroll">Nous contacter</a></li>
+                <li><a [routerLink]="['/profil']" class="smoothScroll" *ngIf="currentUser">Profile</a></li>
+                <li class="active"><a [routerLink]="['/projet']" class="smoothScroll" *ngIf="currentUser">Projet</a>
+                </li>
+                <li><a [routerLink]="['/projetlist']" class="smoothScroll" *ngIf="currentUser">Suivi</a></li>
                 <li><a [routerLink]="['/help']" class="smoothScroll">Aide</a></li>
-                <li><a [routerLink]="['/login']" class="smoothScroll">Se connecter</a></li>
-                <li><a [routerLink]="['/register']" class="smoothScroll">S'enregistrer</a></li>
-                <li><a (click)="logout()" class="smoothScroll">Se déconnecter</a></li>
+                <li><a [routerLink]="['/login']" class="smoothScroll" *ngIf="!currentUser">Se connecter</a></li>
+                <li><a [routerLink]="['/register']" class="smoothScroll" *ngIf="!currentUser">S'enregistrer</a></li>
+                <li><a (click)="logout()" class="smoothScroll" *ngIf="currentUser">Se déconnecter</a></li>
             </ul>
         </div>
 
@@ -36,7 +37,8 @@
         <div class="row align-items-center">
             <div class="col-xl-12 col-sm-12 col-md-12 text-center">
                 <div class="page-title">
-                    <h1>Données personnelles</h1>
+                    <h1><span style="color:purple;"> oooooooooooo </span><span style="color:red;">Création d'un
+                            projet</span><span style="color:purple;"> oooooooooooo </span></h1>
                     <alert></alert>
                 </div>
             </div>
@@ -69,68 +71,76 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
-                            <!-- <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
+                            <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
                                 <mat-form-field class="col-md-6 col-xs-10">
-                                    <input matInput placeholder="Date de début" formControlName="startdate"
-                                        [matDatepicker]="pickerStart" required>
+                                    <input matInput [matDatepicker]="startdate" placeholder="Date de début"
+                                        formControlName="startdate" required>
                                     <mat-error *ngIf="formErrors.startdate.required">
                                         La date de début est obligatoire !
                                     </mat-error>
-                                    <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-                                    <mat-datepicker #pickerStart></mat-datepicker>
+                                    <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
+                                    <mat-datepicker #startdate></mat-datepicker>
                                 </mat-form-field>
                             </div>
                             <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
                                 <mat-form-field class="col-md-6 col-xs-10">
                                     <input matInput placeholder="Date de fin" formControlName="enddate"
-                                        [matDatepicker]="pickerEnd" Frequired>
-                                    <mat-error *ngIf="formErrors.startdate.required">
+                                        [matDatepicker]="enddate" required>
+                                    <mat-error *ngIf="formErrors.enddate.required">
                                         La date de fin est obligatoire !
                                     </mat-error>
-                                    <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-                                    <mat-datepicker #pickerEnd></mat-datepicker>
+                                    <mat-datepicker-toggle matSuffix [for]="enddate"></mat-datepicker-toggle>
+                                    <mat-datepicker #enddate></mat-datepicker>
                                 </mat-form-field>
-                            </div> -->
+                            </div>
 
                             <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
-                                <mat-form-field class="col-md-6 col-xs-10">
-                                    <input matInput placeholder="Compétences requisent" formControlName="skill" required>
+                                <mat-accordion formArrayName="skill">
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <strong>Competences necessaires</strong>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+
+                                        <div [formGroupName]="i" [attr.data-index]="i">
+                                            <mat-form-field>
+                                                <input matInput formControlName="skillname"
+                                                    placeholder="Nom de la compétence" required>
+                                            </mat-form-field>
+
+                                            <mat-form-field>
+                                                <input matInput formControlName="skilllevel"
+                                                    placeholder="Niveau de 1 à 5" required>
+                                            </mat-form-field>
+                                            <mat-error *ngIf="formErrors.skilllevel.required">
+                                                Entier entre 1 et 5 uniquement !
+                                            </mat-error>
+
+                                            <button mat-icon-button (click)="deleteSkill(i)">
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>
+                                            <button mat-button (click)="addSkill()">
+                                                <mat-icon>add_circle_outline</mat-icon>
+                                            </button>
+                                        </div>
+
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                                <!-- <mat-form-field class="col-md-6 col-xs-10">
+                                    <input matInput placeholder="Compétences requisent" formControlName="skill"
+                                        required>
                                     <mat-error *ngIf="formErrors.skill.required">
                                         La compétence est obligatoire !
                                     </mat-error>
-                                </mat-form-field>
-                            </div>
-
-                            <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
-                                <mat-form-field class="col-md-6 col-xs-10">
-                                    <input matInput type="password" placeholder="Mot de passe"
-                                        formControlName="password" required>
-                                    <mat-error *ngIf="formErrors.password.required">
-                                        Le mot de passe est obligatoire !
-                                    </mat-error>
-                                    <mat-error *ngIf="!formErrors.password.required && formErrors.password.minlength">
-                                        Le mot de passe doit faire au moins 6 caractères !
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-
-                            <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
-                                <mat-form-field class="col-md-6 col-xs-10">
-                                    <input matInput type="password" placeholder="Mot de passe (Confirmation)"
-                                        formControlName="passwordConfirm" required>
-                                    <mat-error *ngIf="formErrors.passwordConfirm.required">
-                                        La confirmation du mot de passe est obligatoire !
-                                    </mat-error>
-                                    <mat-error *ngIf="formErrors.passwordConfirm.passwordsNotMatch">
-                                        Les mots de passe doivent êtres les mêmes !
-                                    </mat-error>
-                                </mat-form-field>
+                                </mat-form-field> -->
                             </div>
 
                             <div class="button-row text-center" fxFlex="100">
                                 <button class="add-back-btn text-right btn-submit" mat-raised-button
                                     color="black">Enregistrer</button>
                             </div>
+
                         </form>
                     </div>
                 </div>

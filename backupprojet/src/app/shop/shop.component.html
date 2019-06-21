@@ -17,7 +17,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a [routerLink]="['/']" class="smoothScroll">Acceuil</a></li>
                 <li><a [routerLink]="['/about']" class="smoothScroll">A propos</a></li>
-                <li class="active"><a [routerLink]="['/shop']" class="smoothScroll">Magasin</a></li>
+                <li><a [routerLink]="['/shop']" class="smoothScroll">Magasin</a></li>
                 <li><a [routerLink]="['/contact-us']" class="smoothScroll">Nous contacter</a></li>
                 <li><a [routerLink]="['/help']" class="smoothScroll">Aide</a></li>
                 <li><a [routerLink]="['/login']" class="smoothScroll">Se connecter</a></li>
@@ -47,57 +47,31 @@
         <div class="row">
             <div class="col-md-4 col-xs-12">
                 <mat-card class="example-card">
-                    <img mat-card-image src="../../assets/images/product/product-1.jpg" alt="product">
-                    <mat-card-content>
-                        <p>
-                            The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from
-                            Japan.
-                            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was
-                            originally
-                            bred for hunting.
-                        </p>
-                    </mat-card-content>
+                    <h1>Agent</h1>
                     <mat-card-actions>
+                        <h3>getall</h3>
                         <button mat-button (click)="getAgents()">LIKE</button>
+                        <h3>get</h3>
                         <button mat-button (click)="getAgent(AGENT0)">LIKE</button>
+                        <h3>update</h3>
                         <button mat-button (click)="updateAgent()">LIKE</button>
+                        <h3>create</h3>
                         <button mat-button (click)="addAgent()">LIKE</button>
                     </mat-card-actions>
                 </mat-card>
             </div>
             <div class="col-md-4 col-xs-12">
                 <mat-card class="example-card">
-                    <img mat-card-image src="../../assets/images/product/product-1.jpg" alt="Photo of a Shiba Inu">
-                    <mat-card-content>
-                        <p>
-                            The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from
-                            Japan.
-                            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was
-                            originally
-                            bred for hunting.
-                        </p>
-                    </mat-card-content>
+                    <h1>Car</h1>
                     <mat-card-actions>
-                        <button mat-button>LIKE</button>
-                        <button mat-button>SHARE</button>
-                    </mat-card-actions>
-                </mat-card>
-            </div>
-            <div class="col-md-4 col-xs-12">
-                <mat-card class="example-card">
-                    <img mat-card-image src="../../assets/images/product/product-1.jpg" alt="Photo of a Shiba Inu">
-                    <mat-card-content>
-                        <p>
-                            The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from
-                            Japan.
-                            A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was
-                            originally
-                            bred for hunting.
-                        </p>
-                    </mat-card-content>
-                    <mat-card-actions>
-                        <button mat-button>LIKE</button>
-                        <button mat-button>SHARE</button>
+                        <h3>getall</h3>
+                        <button mat-button (click)="getCars()">LIKE</button>
+                        <h3>get</h3>
+                        <button mat-button (click)="getCar(CAR0)">LIKE</button>
+                        <h3>update</h3>
+                        <button mat-button (click)="updateCar()">LIKE</button>
+                        <h3>create</h3>
+                        <button mat-button (click)="addCar()">LIKE</button>
                     </mat-card-actions>
                 </mat-card>
             </div>

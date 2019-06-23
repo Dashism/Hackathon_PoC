@@ -42,7 +42,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
             startdate: {},
             enddate: {},
             skillname: {},
-            skilllevel: {}
+            level: {}
         };
         this._unsubscribeAll = new Subject();
         this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
@@ -57,7 +57,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
             description: ['', Validators.required],
             startdate: ['', Validators.required],
             enddate: ['', Validators.required],
-            skill: this._formBuilder.array([this.initSkill()])
+            skillset: this._formBuilder.array([this.initSkill()])
         });
         this.form.valueChanges
             .pipe(takeUntil(this._unsubscribeAll))
@@ -75,12 +75,12 @@ export class ProjetComponent implements OnInit, OnDestroy {
     initSkill() {
         return this._formBuilder.group({
             skillname: ['', Validators.required],
-            skilllevel: ['', Validators.pattern('[1-5]')]
+            level: ['', Validators.pattern('[1-5]')]
         });
     }
 
     addSkillForm() {
-        const control = <FormArray>this.form.controls['skill'];
+        const control = <FormArray>this.form.controls['skillset'];
         control.push(this.initSkill());
     }
 
@@ -90,6 +90,8 @@ export class ProjetComponent implements OnInit, OnDestroy {
 
     deleteSkill(index: number) {
         // this.project.skillList.splice(index, 1);
+        const control = <FormArray>this.form.controls['skillset'];
+        control.removeAt(index);
     }
 
     onFormValuesChanged(): void {

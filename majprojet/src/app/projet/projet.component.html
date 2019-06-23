@@ -66,16 +66,16 @@
                                 <mat-form-field class="col-md-6 col-xs-10">
                                     <textarea matInput placeholder="Description" formControlName="description"
                                         required></textarea>
-                                    <mat-error *ngIf="formErrors.description.required">
+                                    <mat-error *ngIf="form.get('description').hasError('required')">
                                         La description est obligatoire !
                                     </mat-error>
                                 </mat-form-field>
                             </div>
                             <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
                                 <mat-form-field class="col-md-6 col-xs-10">
-                                    <input matInput [matDatepicker]="startdate" [min]="today" placeholder="Date de début"
-                                        formControlName="startdate" required>
-                                    <mat-error *ngIf="formErrors.startdate.required">
+                                    <input matInput [matDatepicker]="startdate" [min]="today"
+                                        placeholder="Date de début" formControlName="startdate" required>
+                                    <mat-error *ngIf="form.get('startdate').hasError('required')">
                                         La date de début est obligatoire !
                                     </mat-error>
                                     <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
@@ -85,7 +85,7 @@
                             <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
                                 <mat-form-field class="col-md-6 col-xs-10">
                                     <input matInput placeholder="Date de fin" formControlName="enddate"
-                                        [matDatepicker]="enddate" [min]=""  required>
+                                        [matDatepicker]="enddate" [min]="form.controls.startdate.value" required>
                                     <mat-error *ngIf="formErrors.enddate.required">
                                         La date de fin est obligatoire !
                                     </mat-error>
@@ -94,8 +94,8 @@
                                 </mat-form-field>
                             </div>
 
-                            <!-- <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
-                                <mat-accordion formArrayName="skill">
+                            <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
+                                <mat-accordion formArrayName="skillset" class="col-md-6 col-xs-10">
                                     <mat-expansion-panel>
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -103,38 +103,34 @@
                                             </mat-panel-title>
                                         </mat-expansion-panel-header>
 
-                                        <div [formGroupName]="i" [attr.data-index]="i">
-                                            <mat-form-field>
+                                        <div [formGroupName]="i"
+                                            *ngFor="let skill of form.controls.skillset.controls, let i= index"
+                                            [attr.data-index]="i">
+                                            <mat-form-field class="col-xs-5">
                                                 <input matInput formControlName="skillname"
                                                     placeholder="Nom de la compétence" required>
                                             </mat-form-field>
 
                                             <mat-form-field>
-                                                <input matInput formControlName="skilllevel"
-                                                    placeholder="Niveau de 1 à 5" required>
+                                                <input matInput formControlName="level" placeholder="Niveau de 1 à 5"
+                                                    required>
+                                                <mat-error
+                                                    *ngIf="(form.controls['skillset']).controls[i].get('level').hasError('pattern')">
+                                                    Entier entre 1 et 5 uniquement !
+                                                </mat-error>
                                             </mat-form-field>
-                                            <mat-error *ngIf="formErrors.skilllevel.required">
-                                                Entier entre 1 et 5 uniquement !
-                                            </mat-error>
 
                                             <button mat-icon-button (click)="deleteSkill(i)">
                                                 <mat-icon>cancel</mat-icon>
                                             </button>
-                                            <button mat-button (click)="addSkill()">
-                                                <mat-icon>add_circle_outline</mat-icon>
-                                            </button>
                                         </div>
+                                        <button mat-button (click)="addSkill()">
+                                            <mat-icon>add_circle_outline</mat-icon>
+                                        </button>
 
                                     </mat-expansion-panel>
                                 </mat-accordion>
-                                <mat-form-field class="col-md-6 col-xs-10">
-                                    <input matInput placeholder="Compétences requisent" formControlName="skill"
-                                        required>
-                                    <mat-error *ngIf="formErrors.skill.required">
-                                        La compétence est obligatoire !
-                                    </mat-error>
-                                </mat-form-field>
-                            </div> -->
+                            </div>
 
                             <div class="button-row text-center" fxFlex="100">
                                 <button class="add-back-btn text-right btn-submit" mat-raised-button

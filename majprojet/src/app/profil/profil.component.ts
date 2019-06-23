@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import * as $ from 'jquery';
 
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -31,7 +31,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
     // respbc2: Responsebc2;
     router: Router;
     form: FormGroup;
-    form2: FormGroup;
+    form2: any;
     formErrors: any;
     formErrors2: any;
     currentUser: User;
@@ -63,7 +63,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
             entity: {},
             entitypoint: {},
             diploma: {},
-            skill: {}
+            skillset: {}
         };
         this._unsubscribeAll = new Subject();
         this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
@@ -92,12 +92,12 @@ export class ProfilComponent implements OnInit, OnDestroy {
                 this.onFormValuesChanged();
             });
         this.form2 = this._formBuilder2.group({
-            coin: '',
-            point: '',
-            entity: ['', Validators.required],
-            entitypoint: '',
-            diploma: [''],
-            skill: ['']
+            'coin': '',
+            'point': '',
+            'entity': ['', Validators.required],
+            'entitypoint': '',
+            'diploma': this._formBuilder2.array([this.initDiploma()]),
+            'skillset': this._formBuilder2.array([this.initSkill()])
         });
         this.form2.valueChanges
             .pipe(takeUntil(this._unsubscribeAll))
@@ -123,6 +123,44 @@ export class ProfilComponent implements OnInit, OnDestroy {
                     }
                 }
             });
+    }
+
+    initDiploma() {
+        return this._formBuilder2.group({
+            'diplomaname': ['', Validators.required]
+        });
+    }
+
+    addDiplomaFrom() {
+        const control = <FormArray>this.form2.controls['diploma'];
+        control.push(this.initDiploma());
+    }
+
+    deleteDiploma(index: number) {
+        const control = <FormArray>this.form2.controls['diploma'];
+        control.removeAt(index);
+    }
+
+    initSkill() {
+        return this._formBuilder2.group({
+            'skillname': ['', Validators.required],
+            'level': ['', Validators.pattern('[1-5]')]
+        });
+    }
+
+    addSkillForm() {
+        const control = <FormArray>this.form2.controls['skillset'];
+        control.push(this.initSkill());
+    }
+
+    addSkill() {
+        this.addSkillForm();
+    }
+
+    deleteSkill(index: number) {
+        const control = <FormArray>this.form2.controls['skillset'];
+        control.removeAt(index);
+
     }
 
     ngOnDestroy() {

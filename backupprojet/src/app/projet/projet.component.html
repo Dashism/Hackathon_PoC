@@ -51,8 +51,8 @@
             <div class="register">
                 <div class="row">
                     <div fxLayout="column">
-                        <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
-                            [formGroup]="form" (ngSubmit)="onSubmit()">
+                        <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="projectForm"
+                            [formGroup]="projectForm">
 
                             <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
                                 <mat-form-field class="col-md-6 col-xs-10">
@@ -95,7 +95,7 @@
                             </div>
 
                             <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
-                                <mat-accordion formArrayName="skill">
+                                <mat-accordion formArrayName="skillset" class="col-md-6 col-xs-10">
                                     <mat-expansion-panel>
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
@@ -103,27 +103,27 @@
                                             </mat-panel-title>
                                         </mat-expansion-panel-header>
 
-                                        <div [formGroupName]="i" [attr.data-index]="i">
-                                            <mat-form-field>
-                                                <input matInput formControlName="skillname"
+                                        <div [formGroupName]="i" *ngFor ="let item of projectForm.controls.skillset.controls; let i = index" [attr.data-index]="i">
+                                            <mat-form-field class="col-xs-5"> 
+                                                <input matInput [(ngModel)]="item.skillname" formControlName="skillname"
                                                     placeholder="Nom de la compétence" required>
                                             </mat-form-field>
 
                                             <mat-form-field>
-                                                <input matInput formControlName="skilllevel"
+                                                <input matInput [(ngModel)]="item.level" formControlName="level"
                                                     placeholder="Niveau de 1 à 5" required>
                                             </mat-form-field>
-                                            <mat-error *ngIf="formErrors.skilllevel.required">
+                                            <mat-error *ngIf="formErrors.level.required">
                                                 Entier entre 1 et 5 uniquement !
                                             </mat-error>
 
                                             <button mat-icon-button (click)="deleteSkill(i)">
                                                 <mat-icon>cancel</mat-icon>
                                             </button>
-                                            <button mat-button (click)="addSkill()">
+                                        </div>
+                                            <button mat-button (click)="addSkillForm()">
                                                 <mat-icon>add_circle_outline</mat-icon>
                                             </button>
-                                        </div>
 
                                     </mat-expansion-panel>
                                 </mat-accordion>
@@ -138,7 +138,7 @@
 
                             <div class="button-row text-center" fxFlex="100">
                                 <button class="add-back-btn text-right btn-submit" mat-raised-button
-                                    color="black">Enregistrer</button>
+                                    color="black" (click) = "register()">Enregistrer</button>
                             </div>
 
                         </form>

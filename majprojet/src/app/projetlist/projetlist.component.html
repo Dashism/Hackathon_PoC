@@ -42,22 +42,40 @@
                             <h1><span style="color:purple;"> oo </span><span style="color:red;">Projets créés</span>
                                 <span style="color:purple;"> oo </span></h1>
                         </div>
-                        <div class="page-title"F>
-                            <button class="add-back-btn text-right btn-submit" mat-raised-button
-                                (click)="loadparticipant()" color="black">Charger les participants</button>
+                        <div class="email-box" *ngIf="projectlist.length === 0">
+                            <h2>Vous n'avez créé aucun projet</h2>
+                        </div>
+                        <div class="page-title">
+                            <button [disabled]="participantlist.length > 0 || projectlist.length === 0"
+                                class="button-row text-center" fxFlex="100" mat-raised-button
+                                (click)="loadparticipant()" color="black">Nom
+                                d'utilisateur</button>
+                            <button [disabled]="users.length > 0 || participantlist.length === 0"
+                                class="button-row text-center" fxFlex="100" mat-raised-button
+                                (click)="loadinfoparticipant()" color="black">Contact</button>
                         </div>
                         <div *ngFor="let project of projectlist;let i = index" [attr.data-index]="i">
-                            <div class="email-box" *ngIf="!projectlist">
-                                <h2>Vous n'avez créé aucun projet</h2>
-                            </div>
                             <h2 style="color:blue;">{{project.projectname}}</h2>
                             <h3>{{project.description}}</h3>
-                            <h4>{{project.startdate}}</h4>
-                            <h4>{{project.enddate}}</h4>
-                        </div>
-                        <div *ngFor="let participant of participantlist;let k = index" [attr.data-index]="k">
-                            <h2 style="color:orange;">{{participant.ausername}}</h2>
-                            <h2 style="color:orange;">{{participant.projectname}}</h2>
+                            <h4 style="color:green;">{{project.startdate}}</h4>
+                            <h4 style="color:red;">{{project.enddate}}</h4>
+                            <br>
+                            <div *ngFor="let participant of participantlist;let k = index" [attr.data-index]="k">
+                                <h2 *ngIf="participant.projectname === project.projectname" style="color:skyblue;">
+                                    Non d'utilisateur du participant : {{participant.ausername}}</h2>
+                                <div *ngFor="let u of users;let l = index" [attr.data-index]="l">
+                                    <h4 *ngIf="participant.projectname === project.projectname && participant.ausername === u.username"
+                                        style="color:orangered">Nom : {{u.name}}
+                                    </h4>
+                                    <h4 *ngIf="participant.projectname === project.projectname && participant.ausername === u.username"
+                                        style="color:orangered">Prenom : {{u.firstname}}</h4>
+                                    <h4 *ngIf="participant.projectname === project.projectname && participant.ausername === u.username"
+                                        style="color:orangered">Email : {{u.email}}</h4>
+                                    <h4 *ngIf="participant.projectname === project.projectname && participant.ausername === u.username"
+                                        style="color:orangered">Téléphone : {{u.mobile}}</h4>
+                                    <br>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-6 col-md-6">
@@ -66,8 +84,31 @@
                                     participés</span>
                                 <span style="color:purple;"> oo </span></h1>
                         </div>
-                        <div class="email-box">
+                        <div class="email-box" *ngIf="projectuserparticipate.length === 0">
                             <h2>Vous n'avez participé à aucun projet</h2>
+                        </div>
+                        <div class="page-title">
+                            <button [disabled]="userscreator.length > 0 || projectuserparticipate.length === 0"
+                                class="button-row text-center" fxFlex="100" mat-raised-button
+                                (click)="loadinfocreator()" color="black">Infos Createur</button>
+                        </div>
+                        <div *ngFor="let project of projectuserparticipate;let i = index" [attr.data-index]="i">
+                            <h2 style="color:blue;">{{project.projectname}}</h2>
+                            <h3>{{project.description}}</h3>
+                            <h4 style="color:green;">{{project.startdate}}</h4>
+                            <h4 style="color:red;">{{project.enddate}}</h4>
+                            <br>
+                            <h2 style="color:violet;">Non d'utilisateur du créateur : {{project.ausername}}</h2>
+                            <div *ngFor="let u of userscreator;let l = index" [attr.data-index]="l">
+                                <h4 *ngIf="project.ausername === u.username" style="color:orangered">Nom : {{u.name}}
+                                </h4>
+                                <h4 *ngIf="project.ausername === u.username" style="color:orangered">Prenom :
+                                    {{u.firstname}}</h4>
+                                <h4 *ngIf="project.ausername === u.username" style="color:orangered">Email : {{u.email}}
+                                </h4>
+                                <h4 *ngIf="project.ausername === u.username" style="color:orangered">Téléphone :
+                                    {{u.mobile}}</h4>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -165,7 +165,7 @@
                                         <mat-expansion-panel>
                                             <mat-expansion-panel-header>
                                                 <mat-panel-title>
-                                                    <strong>Vos Diplomes</strong>
+                                                    <strong>Vos diplomes</strong>
                                                 </mat-panel-title>
                                             </mat-expansion-panel-header>
 
@@ -173,7 +173,7 @@
                                                 *ngFor="let item of form2.controls.diploma.controls; let i = index"
                                                 [attr.data-index]="i">
                                                 <mat-form-field style="width: 80%">
-                                                    <input matInput [(ngModel)]="item.diplomaname"
+                                                    <input matInput [(ngModel)]="item[0].diplomaname"
                                                         formControlName="diplomaname" placeholder="Nom du diplome"
                                                         required>
                                                 </mat-form-field>
@@ -201,7 +201,7 @@
                                         <mat-expansion-panel>
                                             <mat-expansion-panel-header>
                                                 <mat-panel-title>
-                                                    <strong>Competences necessaires</strong>
+                                                    <strong>Vos compétences</strong>
                                                 </mat-panel-title>
                                             </mat-expansion-panel-header>
 
@@ -217,10 +217,10 @@
                                                 <mat-form-field>
                                                     <input matInput [(ngModel)]="item.level" formControlName="level"
                                                         placeholder="Niveau de 1 à 5" required>
-                                                        <mat-error
-                                                    *ngIf="(form2.controls['skillset']).controls[i].get('level').hasError('pattern')">
-                                                    Entier entre 1 et 5 uniquement !
-                                                </mat-error>
+                                                    <mat-error
+                                                        *ngIf="(form2.controls['skillset']).controls[i].get('level').hasError('pattern')">
+                                                        Entier entre 1 et 5 uniquement !
+                                                    </mat-error>
                                                 </mat-form-field>
 
                                                 <button mat-icon-button (click)="deleteSkill(i)">

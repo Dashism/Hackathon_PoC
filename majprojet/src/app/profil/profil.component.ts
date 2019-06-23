@@ -16,6 +16,7 @@ import { Responsebc } from '../_models/responsebc';
 import { DataService } from '../data.service';
 import { Agent } from '../_models/agent';
 import { Diploma } from '../_models/diploma';
+import { Skill } from '../_models/skill';
 
 @Component({
     selector: 'app-profil',
@@ -23,9 +24,11 @@ import { Diploma } from '../_models/diploma';
     styleUrls: ['./profil.component.scss']
 })
 export class ProfilComponent implements OnInit, OnDestroy {
+    skill: Skill;
     actualagentnumber: string;
     str: string;
     diploma: Diploma;
+    diplomalist: Diploma[] = [];
     agent: Agent;
     respbc: Responsebc;
     // respbc2: Responsebc2;
@@ -120,6 +123,19 @@ export class ProfilComponent implements OnInit, OnDestroy {
                                 console.log(this.agent.point);
                             });
                         return;
+                    }
+                }
+            });
+        this.dataService.getAll('diplomas')
+            .subscribe((data: {}) => {
+                for (let i = 0; i < 9; i++) {
+                    if (JSON.stringify(data).includes('\\"DIPLOMA' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
+                        this.dataService.get('diploma', 'DIPLOMA' + i.toString())
+                            .subscribe(data2 => {
+                                this.respbc = data2;
+                                this.diploma = JSON.parse(this.respbc.response);
+                                this.diplomalist.push(this.diploma);
+                            });
                     }
                 }
             });
@@ -230,25 +246,82 @@ export class ProfilComponent implements OnInit, OnDestroy {
     }
 
     onSubmit2() {
-        this.dataService.getAll('diplomas')
-            .subscribe((data4: {}) => {
-                if (!JSON.stringify(data4).includes('\"ausername\":\"' + this.currentUser.username + '\",\"diplomaname\":\"' + this.f2.entity.value + '\"')) {
-                    for (let i = 0; i < 20; i++) {
-                        if (!JSON.stringify(data4).includes('DIPLOMA' + i.toString())) {
-                            this.str = i.toString();
-                            this.diploma = new Diploma();
-                            this.diploma.diplomaid = 'DIPLOMA' + i.toString();
-                            this.diploma.username = this.currentUser.username;
-                            this.diploma.diplomaname = this.f2.diploma.value;
-                            console.log(this.diploma);
-                            this.dataService.add('addDiploma', this.diploma).subscribe(res => {
-                            });
-                            return;
+
+        // this.dataService.getAll('diplomas')
+        //     .subscribe((data4: {}) => {
+        //         for (let b = 0; b < this.f2.diploma.value.length; b++) {
+        //             if (!JSON.stringify(data4).includes('\\"ausername\\":\\"' + this.currentUser.username + '\\",\\"diplomaname\\":\\"' + this.f2.diploma.value[b].diplomaname + '\\"')) {
+        //                 for (let i = 0; i < 20; i++) {
+        //                     if (!JSON.stringify(data4).includes('DIPLOMA' + i.toString())) {
+        //                         this.str = i.toString();
+        //                         this.diploma = new Diploma();
+        //                         this.diploma.diplomaid = 'DIPLOMA' + i.toString();
+        //                         this.diploma.username = this.currentUser.username;
+        //                         this.diploma.diplomaname = this.f2.diploma.value[b].diplomaname;
+        //                         console.log(this.diploma);
+        //                         this.dataService.add('addDiploma', this.diploma).subscribe(res => {
+        //                         });
+        //                         return;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     );
+
+        this.dataService.getAll('skills')
+            .subscribe((data5: {}) => {
+                for (let b = 0; b < this.f2.skillset.value.length; b++) {
+                    if (this.checkskills()) {
+                        console.log('waza');
+                        for (let i = 0; i < 20; i++) {
+                            if (!JSON.stringify(data5).includes('SKILL' + i.toString())) {
+                                this.str = i.toString();
+                                this.skill = new Skill();
+                                this.skill.skillid = 'SKILL' + i.toString();
+                                this.skill.username = this.currentUser.username;
+                                this.skill.skillname = this.f2.skillset.value[b].skillname;
+                                this.skill.level = this.f2.skillset.value[b].level;
+                                this.skill.grade = '0';
+                                console.log(this.diploma);
+                                this.dataService.add('addDiploma', this.diploma).subscribe(res => {
+                                });
+                                return;
+                            }
                         }
                     }
                 }
-            }
-            );
+            });
+    }
+
+    checkskills() {
+        this.dataService.getAll('skills')
+            .subscribe((data5: {}) => {
+                for (let l = 0; l < 20; l++) {
+                    this.dataService.get('skill', 'SKILL' + l.toString())
+                        .subscribe(data10 => {
+                            for (let b = 0; b < this.f2.skillset.value.length; b++) {
+                                if (JSON.stringify(data10).includes('\\"ausername\\":\\"' + this.currentUser.username + '\\"') && (JSON.stringify(data10).includes('\\"level\\":\\"' + this.f2.skillset.value[b].level + '\\",\\"skillname\\":\\"' + this.f2.skillset.value[b].skillname + '\\"'))) {
+                                    for (let i = 0; i < 20; i++) {
+                                        if (!JSON.stringify(data5).includes('SKILL' + i.toString())) {
+                                            this.str = i.toString();
+                                            this.skill = new Skill();
+                                            this.skill.skillid = 'SKILL' + i.toString();
+                                            this.skill.username = this.currentUser.username;
+                                            this.skill.skillname = this.f2.skillset.value[b].skillname;
+                                            this.skill.level = this.f2.skillset.value[b].level;
+                                            this.skill.grade = '0';
+                                            console.log(this.diploma);
+                                            this.dataService.add('addDiploma', this.diploma).subscribe(res => {
+                                            });
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                }
+            });
     }
 
     openMenu() {

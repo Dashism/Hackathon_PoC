@@ -25,9 +25,15 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
     respbc: Responsebc;
     participant: Participant;
     participantlist: Participant[] = [];
+    participantlist2: Participant[] = [];
     projectnumber: Number[] = [];
     project: Project;
     projectlist: Project[] = [];
+    projectuserparticipate: Project[] = [];
+    users: User[] = [];
+    usersmodif: User[] = [];
+    usersmodif2: User[] = [];
+    userscreator: User[] = [];
     router: Router;
     form: FormGroup;
     formErrors: any;
@@ -83,12 +89,39 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
                                 this.respbc = data2;
                                 this.project = new Project();
                                 this.project = JSON.parse(this.respbc.response);
-                                console.log(this.project.projectname);
                                 this.projectlist.push(this.project);
                             });
                     }
                 }
             });
+
+
+        for (let i = 0; i < 9; i++) {
+            this.dataService.get('participant', 'PARTICIPANT' + i.toString())
+                .subscribe(data10 => {
+                    if (JSON.stringify(data10).includes('\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
+                        this.respbc = data10;
+                        this.participant = new Participant();
+                        this.participant = JSON.parse(this.respbc.response);
+                        this.participantlist2.push(this.participant);
+                        console.log(this.participantlist2);
+                        for (let l = 0; l < 9; l++) {
+                            this.dataService.get('project', 'PROJECT' + l.toString())
+                                .subscribe(data11 => {
+                                    for (let k = 0; k < this.participantlist2.length; k++) {
+                                        if (JSON.stringify(data11).includes('\\"projectname\\":\\"' + this.participantlist2[k].projectname + '\\"')) {
+                                            this.respbc = data11;
+                                            this.project = new Project();
+                                            this.project = JSON.parse(this.respbc.response);
+                                            this.projectuserparticipate.push(this.project);
+                                            console.log(this.projectuserparticipate);
+                                        }
+                                    }
+                                });
+                        }
+                    }
+                });
+        }
     }
 
 
@@ -175,6 +208,37 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
 
     logout(): void {
         this.authenticationService.logout();
+    }
+
+    loadinfoparticipant() {
+        this.userService.getAll().pipe(first()).subscribe(users => {
+            console.log(users);
+            console.log(this.participantlist);
+            for (let k = 0; k < this.participantlist.length; k++) {
+                for (let i = 0; i < users.length; i++) {
+                    console.log(users[i].username);
+                    console.log(this.participantlist[k].username);
+                    if (users[i].username === this.participantlist[k].ausername) {
+                        this.usersmodif.push(users[i]);
+                    }
+                }
+                this.users = this.usersmodif;
+            }
+        });
+    }
+
+    loadinfocreator() {
+        this.userService.getAll().pipe(first()).subscribe(users => {
+            for (let k = 0; k < this.projectuserparticipate.length; k++) {
+                for (let i = 0; i < users.length; i++) {
+                    if (users[i].username === this.projectuserparticipate[k].ausername) {
+                        this.usersmodif2.push(users[i]);
+                    }
+                }
+                this.userscreator = this.usersmodif2;
+            }
+            console.log(this.userscreator);
+        });
     }
 }
 

@@ -5,6 +5,7 @@
 export class Skill {
     public docType?: string;
     public diplomaid?: string;
+    public skillid?: string;
     public username: string;
     public skillname: string;
     public level: string;

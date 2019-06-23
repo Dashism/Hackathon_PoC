@@ -14,6 +14,7 @@ import { User } from '../_models';
 import { DataService } from '../data.service';
 import { Project } from '../_models/project';
 import { Responsebc } from '../_models/responsebc';
+import { Participant } from '../_models/participant';
 
 @Component({
     selector: 'app-projetlist',
@@ -22,6 +23,8 @@ import { Responsebc } from '../_models/responsebc';
 })
 export class ProjetlistComponent implements OnInit, OnDestroy {
     respbc: Responsebc;
+    participant: Participant;
+    participantlist: Participant[] = [];
     projectnumber: Number[] = [];
     project: Project;
     projectlist: Project[] = [];
@@ -75,30 +78,37 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
             .subscribe((data: {}) => {
                 for (let i = 0; i < 9; i++) {
                     if (JSON.stringify(data).includes('\\"PROJECT' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
-                        // this.projectnumber.push(i);
-                        // console.log(this.projectnumber);
                         this.dataService.get('project', 'PROJECT' + i.toString())
                             .subscribe(data2 => {
                                 this.respbc = data2;
                                 this.project = new Project();
                                 this.project = JSON.parse(this.respbc.response);
+                                console.log(this.project.projectname);
                                 this.projectlist.push(this.project);
                             });
                     }
                 }
             });
-        // for (let i = 0; i < this.projectnumber.length; i++) {
-        //     console.log(this.projectnumber[i]);
-        //     console.log(this.projectnumber[i].toString());
-        //     this.dataService.get('project', 'PROJECT' + this.projectnumber[i].toString())
-        //         .subscribe(data2 => {
-        //             console.log(data2);
-        //             this.project = new Project();
-        //             this.project = data2;
-        //             this.projectlist.push(this.project);
-        //         });
-        // }
-        console.log(this.projectlist);
+    }
+
+
+    loadparticipant() {
+        for (let i = 0; i < this.projectlist.length; i++) {
+            for (let k = 0; k < 9; k++) {
+                this.dataService.get('participant', 'PARTICIPANT' + k.toString())
+                    .subscribe(data3 => {
+                        console.log('\\"projectname\\":\\"' + this.project.projectname + '\\"');
+                        console.log(JSON.stringify(data3).includes('\\"projectname\\":\\"' + this.projectlist[i].projectname + '\\"'));
+                        if (JSON.stringify(data3).includes('\\"projectname\\":\\"' + this.projectlist[i].projectname + '\\"')) {
+                            this.respbc = data3;
+                            this.participant = new Participant();
+                            this.participant = JSON.parse(this.respbc.response);
+                            console.log(this.participant);
+                            this.participantlist.push(this.participant);
+                        }
+                    });
+            }
+        }
     }
 
     ngOnDestroy() {

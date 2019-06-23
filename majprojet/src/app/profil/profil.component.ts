@@ -192,22 +192,6 @@ export class ProfilComponent implements OnInit, OnDestroy {
     }
 
     onSubmit2() {
-        // this.dataService.getAll('agents')
-        //     .subscribe((data3: {}) => {
-        //         for (let i = 0; i < 80; i++) {
-        //             if (JSON.stringify(data3).includes('\\"entity\\":\\"' + this.f2.entity.value.toString() + '\\",\\"entitypoint\\":\\"' + i.toString() + '\\"')) {
-        //                 this.agent.username = this.currentUser.username;
-        //                 this.agent.entity = this.f2.entity.value.toString();
-        //                 this.agent.entitypoint = i.toString();
-        //                 console.log(this.agent);
-        //                 this.dataService.update('changeAgent', 'AGENT' + this.actualagentnumber, this.agent)
-        //                     .subscribe(res => {
-        //                         this.alertService.error('Enregistrement de vos données BlockChain reussi !', false);
-        //                     });
-        //                 return;
-        //             }
-        //         }
-        //     });
         this.dataService.getAll('diplomas')
             .subscribe((data4: {}) => {
                 if (!JSON.stringify(data4).includes('\"ausername\":\"' + this.currentUser.username + '\",\"diplomaname\":\"' + this.f2.entity.value + '\"')) {

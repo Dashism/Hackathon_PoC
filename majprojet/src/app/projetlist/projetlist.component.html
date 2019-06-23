@@ -42,8 +42,12 @@
                             <h1><span style="color:purple;"> oo </span><span style="color:red;">Projets créés</span>
                                 <span style="color:purple;"> oo </span></h1>
                         </div>
+                        <div class="page-title"F>
+                            <button class="add-back-btn text-right btn-submit" mat-raised-button
+                                (click)="loadparticipant()" color="black">Charger les participants</button>
+                        </div>
                         <div *ngFor="let project of projectlist;let i = index" [attr.data-index]="i">
-                            <div class="email-box" *ngIf="!project">
+                            <div class="email-box" *ngIf="!projectlist">
                                 <h2>Vous n'avez créé aucun projet</h2>
                             </div>
                             <h2 style="color:blue;">{{project.projectname}}</h2>
@@ -51,10 +55,15 @@
                             <h4>{{project.startdate}}</h4>
                             <h4>{{project.enddate}}</h4>
                         </div>
+                        <div *ngFor="let participant of participantlist;let k = index" [attr.data-index]="k">
+                            <h2 style="color:orange;">{{participant.ausername}}</h2>
+                            <h2 style="color:orange;">{{participant.projectname}}</h2>
+                        </div>
                     </div>
                     <div class="col-xl-6 col-md-6">
                         <div class="page-title">
-                            <h1><span style="color:purple;"> oo </span><span style="color:red;">Projets participés</span>
+                            <h1><span style="color:purple;"> oo </span><span style="color:red;">Projets
+                                    participés</span>
                                 <span style="color:purple;"> oo </span></h1>
                         </div>
                         <div class="email-box">

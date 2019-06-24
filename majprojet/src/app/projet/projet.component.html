@@ -52,7 +52,7 @@
                 <div class="row">
                     <div fxLayout="column">
                         <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
-                            [formGroup]="form" (ngSubmit)="onSubmit()">
+                            [formGroup]="form">
 
                             <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
                                 <mat-form-field class="col-md-6 col-xs-10">
@@ -99,7 +99,7 @@
                                     <mat-expansion-panel>
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
-                                                <strong>Competences necessaires</strong>
+                                                <strong>Compétences nécessaires</strong>
                                             </mat-panel-title>
                                         </mat-expansion-panel-header>
 
@@ -132,9 +132,26 @@
                                 </mat-accordion>
                             </div>
 
-                            <div class="button-row text-center" fxFlex="100">
-                                <button class="add-back-btn text-right btn-submit" mat-raised-button
-                                    color="black">Enregistrer</button>
+                            <!-- <div class="button-row text-center" fxFlex="100">
+                                <button class="add-back-btn text-right btn-submit" mat-raised-button color="black"
+                                    (click)="onSubmit()">Vérification</button>
+                            </div> -->
+                            <br>
+                            <div *ngIf="skillok === '2'" class="button-row text-center" fxFlex="100">
+                                <button mat-raised-button color="warn" (click)="reset3()">Validation</button>
+                                <h4 style="color:red;">Pas assez de compétences disponibles, reclicker sur le button
+                                    pour recommencer</h4>
+                            </div>
+
+                            <div *ngIf="skillok === '3'" class="button-row text-center" fxFlex="100">
+                                <button mat-raised-button color="primary"
+                                    (click)="checkifskillspresent()">Validation</button>
+                            </div>
+
+                            <div *ngIf="skillok === '1'" class="button-row text-center" fxFlex="100">
+                                <button mat-raised-button color="accent" (click)="onSubmit()">Validation</button>
+                                <h4 style="color:blue;">Les compétences sont disponibles, reclicker sur le button
+                                    pour valider</h4>
                             </div>
 
                         </form>

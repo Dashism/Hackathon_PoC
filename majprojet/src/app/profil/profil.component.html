@@ -53,7 +53,7 @@
                 <div class="row">
                     <div class="col-xl-6 col-md-6">
                         <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
-                            [formGroup]="form" (ngSubmit)="onSubmit()">
+                            [formGroup]="form">
 
                             <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
                                 <mat-form-field class="col-md-12 col-xs-12">
@@ -122,14 +122,14 @@
 
                             <div class="button-row text-center" fxFlex="100">
                                 <button class="add-back-btn text-right btn-submit" mat-raised-button
-                                    color="black">Enregistrer</button>
+                                    color="black" (click)="onSubmit()">Enregistrer</button>
                             </div>
                         </form>
                     </div>
                     <div class="col-xl-6 col-md-6">
                         <div fxLayout="column">
                             <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto"
-                                name="form2" [formGroup]="form2" (ngSubmit)="onSubmit2()">
+                                name="form2" [formGroup]="form2">
 
                                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
                                     <mat-form-field class="col-md-12 col-xs-12">
@@ -145,7 +145,7 @@
                                 </div>
                                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
                                     <mat-form-field class="col-md-12 col-xs-12">
-                                        <input matInput placeholder="Numero de votre entité" formControlName="entity"
+                                        <input matInput [(ngModel)]="agent.entity" placeholder="Numero de votre entité" formControlName="entity"
                                             required>
                                         <mat-error *ngIf="formErrors2.entity.required">
                                             Vous devez remplir votre code entité !
@@ -173,7 +173,7 @@
                                                 *ngFor="let item of form2.controls.diploma.controls; let i = index"
                                                 [attr.data-index]="i">
                                                 <mat-form-field style="width: 80%">
-                                                    <input matInput [(ngModel)]="item[0].diplomaname"
+                                                    <input matInput [(ngModel)]="item.diplomaname"
                                                         formControlName="diplomaname" placeholder="Nom du diplome"
                                                         required>
                                                 </mat-form-field>
@@ -239,7 +239,7 @@
                                 <br>
                                 <div class="button-row text-center" fxFlex="100">
                                     <button class="add-back-btn text-right btn-submit" mat-raised-button
-                                        color="black">Enregistrer</button>
+                                        color="black" (click)="onSubmit2()">Enregistrer</button>
                                 </div>
                             </form>
                         </div>

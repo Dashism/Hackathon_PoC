@@ -12,7 +12,11 @@ import { first } from 'rxjs/operators';
 import { AlertService, UserService, AuthenticationService } from '../_services';
 import { User } from '../_models';
 import { DataService } from '../data.service';
+import { Skill } from '../_models/skill';
 import { Project } from '../_models/project';
+import { Projectskill } from '../_models/projectskill';
+import { Responsebc } from '../_models/responsebc';
+import { Participant } from '../_models/participant';
 
 @Component({
     selector: 'app-projet',
@@ -20,6 +24,11 @@ import { Project } from '../_models/project';
     styleUrls: ['./projet.component.scss']
 })
 export class ProjetComponent implements OnInit, OnDestroy {
+    participant: Participant;
+    skillok: string;
+    skill: Skill;
+    pskill: Projectskill;
+    respbc: Responsebc;
     today: Date;
     project: Project;
     router: Router;
@@ -65,6 +74,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
                 this.onFormValuesChanged();
             });
         console.log(this.currentUser.id);
+        this.skillok = '3';
     }
 
     ngOnDestroy() {
@@ -146,38 +156,74 @@ export class ProjetComponent implements OnInit, OnDestroy {
                     }
                 }
             });
+
+        for (let i = 0; i < this.f.skillset.value.length; i++) {
+            for (let k = 0; k < 13; k++) {
+                this.dataService.get('skill', 'SKILL' + k.toString())
+                    .subscribe(data2 => {
+                        if (JSON.stringify(data2).includes('\\"level\\":\\"' + this.f.skillset.value[i].level + '\\",\\"skillname\\":\\"' + this.f.skillset.value[i].skillname + '\\"')) {
+                            this.respbc = data2;
+                            this.skill = JSON.parse(this.respbc.response);
+                            this.participant = new Participant();
+                            this.participant.projectname = this.f.name.value;
+                            this.participant.username = this.skill.username;
+                            for (let l = 0; l < 13; l++) {
+                                this.dataService.getAll('participant')
+                                    .subscribe((data3: {}) => {
+                                        if (!JSON.stringify(data3).includes('PARTICIPANT' + l.toString())) {
+                                            if (!JSON.stringify(data3).includes('\\"ausername\\":\\"' + this.participant.username + '\\",\\"projectname\\":\\"' + this.participant.projectname + '\\"')) {
+                                                this.participant.participantid = 'PARTICIPANT' + l.toString();
+                                                this.dataService.add('addParticpant', this.participant).subscribe(res => {
+
+                                                });
+                                            }
+                                        }
+                                    });
+                            }
+                            this.pskill = new Projectskill();
+                            this.pskill.projectname = this.f.name.value;
+                            this.pskill.skillname = this.f.skillset.value[i].skillname;
+                            this.pskill.level = this.f.skillset.value[i].level;
+                            this.pskill.grade = '';
+                            for (let l = 0; l < 13; l++) {
+                                this.dataService.getAll('projectskills')
+                                    .subscribe((data3: {}) => {
+                                        if (!JSON.stringify(data3).includes('PROJECTSKILL' + l.toString())) {
+                                            this.pskill.projectskillid = 'PROJECTSKILL' + l.toString();
+                                            this.dataService.add('addProjectskill', this.pskill).subscribe(res => {
+
+                                            });
+                                        }
+                                    });
+                            }
+                        }
+                    });
+            }
+        }
+        this.skillok = '3';
     }
 
     logout(): void {
         this.authenticationService.logout();
     }
-}
 
-/**
- * Confirm password
- *
- * @param {AbstractControl} control
- * @returns {{passwordsNotMatch: boolean}}
- */
-function confirmPassword(control: AbstractControl): any {
-    if (!control.parent || !control) {
-        return;
+    checkifskillspresent() {
+        for (let i = 0; i < this.f.skillset.value.length; i++) {
+            this.dataService.getAll('skills')
+                .subscribe((data: {}) => {
+                    if (!JSON.stringify(data).includes('\\"level\\":\\"' + this.f.skillset.value[i].level + '\\",\\"skillname\\":\\"' + this.f.skillset.value[i].skillname + '\\"')) {
+                        console.log('cool')
+                        this.skillok = '2';
+                        return;
+                    } else {
+                        console.log('pascool');
+                        this.skillok = '1';
+                    }
+                });
+        }
     }
 
-    const password = control.parent.get('password');
-    const passwordConfirm = control.parent.get('passwordConfirm');
-
-    if (!password || !passwordConfirm) {
-        return;
-    }
-
-    if (passwordConfirm.value === '') {
-        return;
-    }
-
-    if (password.value !== passwordConfirm.value) {
-        return {
-            passwordsNotMatch: true
-        };
+    reset3() {
+        this.skillok = '3';
     }
 }

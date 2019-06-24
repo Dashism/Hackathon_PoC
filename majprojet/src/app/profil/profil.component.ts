@@ -29,6 +29,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
     str: string;
     diploma: Diploma;
     diplomalist: Diploma[] = [];
+    diplomalisttest: Diploma[] = [];
     agent: Agent;
     respbc: Responsebc;
     // respbc2: Responsebc2;
@@ -113,6 +114,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
                     if (JSON.stringify(data).includes('\\"AGENT' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
                         console.log(i.toString());
                         this.actualagentnumber = i.toString();
+                        console.log(this.actualagentnumber + '------------');
                         this.dataService.get('agent', 'AGENT' + i.toString())
                             .subscribe(data2 => {
                                 this.respbc = data2;
@@ -139,6 +141,20 @@ export class ProfilComponent implements OnInit, OnDestroy {
                     }
                 }
             });
+        this.diploma = new Diploma();
+        this.diploma.diplomaname = 'Chimie';
+        this.diplomalisttest.push(this.diploma);
+        this.diploma = new Diploma();
+        this.diploma.diplomaname = 'Mathematique';
+        this.diplomalisttest.push(this.diploma);
+        this.diploma = new Diploma();
+        this.diploma.diplomaname = 'Physique';
+        this.diplomalisttest.push(this.diploma);
+        console.log(this.diplomalisttest);
+        console.log(this.form2.controls.diploma.controls);
+        this.diplomalisttest = this.form2.controls.diploma.controls;
+        console.log(this.form2.controls.diploma.controls); 
+        const count = ('Physique'.match(/is/g) || []).length;
     }
 
     initDiploma() {
@@ -246,7 +262,46 @@ export class ProfilComponent implements OnInit, OnDestroy {
     }
 
     onSubmit2() {
-
+        for (let i = 0; i < 9; i++) {
+            this.dataService.get('agent', 'AGENT' + i.toString())
+                .subscribe(data => {
+                    for (let k = 0; k < 99; k++) {
+                        if (JSON.stringify(data).includes('\\"entity\\":\\"' + this.f2.entity.value + '\\",\\"entitypoint\\":\\"' + k.toString() + '\\"')) {
+                            this.f2.entitypoint.value = k.toString();
+                            console.log(this.f2.entitypoint.value);
+                            this.agent = new Agent();
+                            this.agent.agentid = 'AGENT' + this.actualagentnumber;
+                            this.agent.username = this.currentUser.username;
+                            this.agent.coin = this.f2.coin.value;
+                            this.agent.entity = this.f2.entity.value;
+                            this.agent.entitypoint = this.f2.entitypoint.value;
+                            this.agent.point = this.f2.point.value;
+                            console.log(this.agent);
+                            this.dataService.add('addAgent', this.agent)
+                                .subscribe(res => {
+                                    return;
+                                });
+                        }
+                    }
+                    this.dataService.getAll('agents')
+                        .subscribe((data2: {}) => {
+                            if (!JSON.stringify(data2).includes('\\"entity\\":\\"' + this.f2.entity.value + '\\"')) {
+                                this.agent = new Agent();
+                                this.agent.agentid = 'AGENT' + this.actualagentnumber;
+                                this.agent.username = this.currentUser.username;
+                                this.agent.coin = this.f2.coin.value;
+                                this.agent.entity = this.f2.entity.value;
+                                this.agent.entitypoint = '0';
+                                this.agent.point = this.f2.point.value;
+                                console.log(this.agent);
+                                this.dataService.add('addAgent', this.agent)
+                                    .subscribe(res => {
+                                        return;
+                                    });
+                            }
+                        });
+                });
+        }
         // this.dataService.getAll('diplomas')
         //     .subscribe((data4: {}) => {
         //         for (let b = 0; b < this.f2.diploma.value.length; b++) {
@@ -269,29 +324,29 @@ export class ProfilComponent implements OnInit, OnDestroy {
         //     }
         //     );
 
-        this.dataService.getAll('skills')
-            .subscribe((data5: {}) => {
-                for (let b = 0; b < this.f2.skillset.value.length; b++) {
-                    if (this.checkskills()) {
-                        console.log('waza');
-                        for (let i = 0; i < 20; i++) {
-                            if (!JSON.stringify(data5).includes('SKILL' + i.toString())) {
-                                this.str = i.toString();
-                                this.skill = new Skill();
-                                this.skill.skillid = 'SKILL' + i.toString();
-                                this.skill.username = this.currentUser.username;
-                                this.skill.skillname = this.f2.skillset.value[b].skillname;
-                                this.skill.level = this.f2.skillset.value[b].level;
-                                this.skill.grade = '0';
-                                console.log(this.diploma);
-                                this.dataService.add('addDiploma', this.diploma).subscribe(res => {
-                                });
-                                return;
-                            }
-                        }
-                    }
-                }
-            });
+        // this.dataService.getAll('skills')
+        //     .subscribe((data5: {}) => {
+        //         for (let b = 0; b < this.f2.skillset.value.length; b++) {
+        //             if (this.checkskills()) {
+        //                 console.log('waza');
+        //                 for (let i = 0; i < 20; i++) {
+        //                     if (!JSON.stringify(data5).includes('SKILL' + i.toString())) {
+        //                         this.str = i.toString();
+        //                         this.skill = new Skill();
+        //                         this.skill.skillid = 'SKILL' + i.toString();
+        //                         this.skill.username = this.currentUser.username;
+        //                         this.skill.skillname = this.f2.skillset.value[b].skillname;
+        //                         this.skill.level = this.f2.skillset.value[b].level;
+        //                         this.skill.grade = '0';
+        //                         console.log(this.diploma);
+        //                         this.dataService.add('addDiploma', this.diploma).subscribe(res => {
+        //                         });
+        //                         return;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     });
     }
 
     checkskills() {

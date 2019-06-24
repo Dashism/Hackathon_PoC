@@ -48,16 +48,6 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
         private dataService: DataService<any>
     ) {
         this.openMenu();
-        this.formErrors = {
-            id: {},
-            name: {},
-            firstname: {},
-            email: {},
-            mobile: {},
-            username: {},
-            password: {},
-            passwordConfirm: {}
-        };
         this._unsubscribeAll = new Subject();
         this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
             this.currentUser = user;
@@ -65,21 +55,6 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
     };
 
     ngOnInit() {
-        this.form = this._formBuilder.group({
-            id: this.currentUser.id,
-            name: [this.currentUser.name, Validators.required],
-            firstname: [this.currentUser.firstname, Validators.required],
-            email: [this.currentUser.email, [Validators.required, Validators.email]],
-            mobile: [this.currentUser.mobile, [Validators.required, Validators.pattern(/^\+?\d{10}$/)]],
-            username: [this.currentUser.username, Validators.required],
-            password: [this.currentUser.password, [Validators.required, Validators.minLength(5)]],
-            passwordConfirm: [this.currentUser.password, [Validators.required, confirmPassword]]
-        });
-        this.form.valueChanges
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(() => {
-                this.onFormValuesChanged();
-            });
         this.dataService.getAll('projects')
             .subscribe((data: {}) => {
                 for (let i = 0; i < 9; i++) {
@@ -164,38 +139,6 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
         }
     }
 
-    // convenience getter for easy access to form fields
-    get f() { return this.form.controls; }
-
-    onSubmit() {
-        if (this.form.invalid) {
-            console.log('wazaaaaaaaaaaaaaaa');
-            return;
-        }
-
-        this.userService.update(this.form.value)
-            .pipe(first())
-            .subscribe(
-                data => {
-                    this.alertService.success('Enregistrement reussi', true);
-                },
-                error => {
-                    this.alertService.error(error);
-                });
-
-        this.authenticationService.logoutW();
-        this.authenticationService.login(this.f.username.value, this.f.password.value)
-            .pipe(first())
-            .subscribe(
-                data => {
-                    this.router.navigate(['/about']);
-                },
-                error => {
-                    this.alertService.error(error);
-                });
-
-    }
-
     openMenu() {
         $('body').removeClass('noScroll');
         if ($('.collapse').hasClass('collapse-active')) {
@@ -222,8 +165,9 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
                         this.usersmodif.push(users[i]);
                     }
                 }
-                this.users = this.usersmodif;
             }
+            this.users = this.usersmodif;
+            this.users = this.users.filter((el, i, a) => i === a.indexOf(el));
         });
     }
 
@@ -242,31 +186,3 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
     }
 }
 
-/**
- * Confirm password
- *
- * @param {AbstractControl} control
- * @returns {{passwordsNotMatch: boolean}}
- */
-function confirmPassword(control: AbstractControl): any {
-    if (!control.parent || !control) {
-        return;
-    }
-
-    const password = control.parent.get('password');
-    const passwordConfirm = control.parent.get('passwordConfirm');
-
-    if (!password || !passwordConfirm) {
-        return;
-    }
-
-    if (passwordConfirm.value === '') {
-        return;
-    }
-
-    if (password.value !== passwordConfirm.value) {
-        return {
-            passwordsNotMatch: true
-        };
-    }
-}

@@ -2,10 +2,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export class Skill {
+export class Projectskill {
     public docType?: string;
-    public skillid?: string;
-    public username: string;
+    public projectskillid?: string;
+    public projectname: string;
     public skillname: string;
     public level: string;
     public grade: string;

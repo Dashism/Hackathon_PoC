@@ -148,6 +148,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
                         this.project.description = this.f.description.value;
                         this.project.startdate = this.f.startdate.value.toString();
                         this.project.enddate = this.f.enddate.value.toString();
+                        this.project.finish = '0';
                         console.log(this.project);
                         this.dataService.add('addProject', this.project).subscribe(res => {
                         });
@@ -174,7 +175,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
                                             if (!JSON.stringify(data3).includes('\\"ausername\\":\\"' + this.participant.username + '\\",\\"projectname\\":\\"' + this.participant.projectname + '\\"')) {
                                                 this.participant.participantid = 'PARTICIPANT' + l.toString();
                                                 this.dataService.add('addParticpant', this.participant).subscribe(res => {
-
+                                                    return;
                                                 });
                                             }
                                         }
@@ -191,7 +192,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
                                         if (!JSON.stringify(data3).includes('PROJECTSKILL' + l.toString())) {
                                             this.pskill.projectskillid = 'PROJECTSKILL' + l.toString();
                                             this.dataService.add('addProjectskill', this.pskill).subscribe(res => {
-
+                                            return;
                                             });
                                         }
                                     });

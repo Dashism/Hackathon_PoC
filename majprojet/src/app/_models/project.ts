@@ -11,6 +11,7 @@ export class Project {
     public username: string;
     public projectname: string;
     public description: string;
-    public startdate: Date;
-    public enddate: Date;
+    public startdate: string;
+    public enddate: string;
+    public finish: string;
 }

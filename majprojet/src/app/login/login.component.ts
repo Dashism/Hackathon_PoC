@@ -11,6 +11,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 import { AlertService, AuthenticationService } from '../_services';
+import { DataService } from '../data.service';
+import { Project } from '../_models/project';
+import { Responsebc } from '../_models/responsebc';
 
 @Component({
     selector: 'login',
@@ -19,6 +22,9 @@ import { AlertService, AuthenticationService } from '../_services';
     animations: fuseAnimations
 })
 export class LoginComponent implements OnInit, OnDestroy {
+    respbc: Responsebc;
+    project: Project;
+    projectlist: Project[] = [];
     loginForm: FormGroup;
     loginFormErrors: any;
     loading = false;
@@ -40,7 +46,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private dataService: DataService<any>
     ) {
         this.openMenu();
         // Configure the layout
@@ -146,10 +153,32 @@ export class LoginComponent implements OnInit, OnDestroy {
             .pipe(first())
             .subscribe(
                 data => {
+                    for (let i = 0; i < 13; i++) {
+                        this.dataService.get('project', 'PROJECT' + i.toString())
+                            .subscribe(data => {
+                                if (JSON.stringify(data).includes('\\"ausername\\":\\"' + this.f.username.value + '\\"') && !JSON.stringify(data).includes('\\"finish\\":\\"1\\"')) {
+                                    this.respbc = data;
+                                    this.project = JSON.parse(this.respbc.response);
+                                    this.projectlist.push(this.project);
+                                    for (let k = 0; k < this.projectlist.length; k++) {
+                                        const enddate = new Date(this.projectlist[k].enddate);
+                                        const actualdate = new Date();
+                                        console.log(enddate);
+                                        console.log(actualdate);
+                                        if (enddate < actualdate) {
+                                            this.router.navigate(['/projetfinish']);
+                                            return;
+                                        }
+                                    }
+                                }
+                            });
+                    }
                     if (this.f.username.value === 'Admin' && this.f.password.value === 'Admin') {
                         this.router.navigate(['/admin']);
+                        return;
                     } else {
                         this.router.navigate(['/profil']);
+                        return;
                     }
                 },
                 error => {

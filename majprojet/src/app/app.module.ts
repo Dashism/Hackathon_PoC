@@ -44,6 +44,7 @@ import { ProfilComponent } from './profil/profil.component';
 import { ProjetComponent } from './projet/projet.component';
 import { ProjetlistComponent } from './projetlist/projetlist.component';
 import { HomeComponent } from './home/home.component';
+import { ProjetfinishComponent } from './projetfinish/projetfinish.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { ShopComponent } from './shop/shop.component';
 import { SlideshowModule } from '../../public_api';
@@ -85,8 +86,8 @@ const appRoutes: Routes = [
         , canActivate: [AuthGuard]
     },
     {
-        path: 'shop',
-        component: ShopComponent
+        path: 'projetfinish',
+        component: ProjetfinishComponent
     },
     {
         path: 'projet',
@@ -123,7 +124,8 @@ const appRoutes: Routes = [
         AdminComponent,
         ProfilComponent,
         ProjetComponent,
-        ProjetlistComponent
+        ProjetlistComponent,
+        ProjetfinishComponent
         // ForgotPasswordComponent,
         // FaqComponent,
     ],

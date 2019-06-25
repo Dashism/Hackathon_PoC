@@ -622,7 +622,7 @@ app.post('/api/addProject/', async function (req, res, next) {
                 // Submit the specified transaction.
                 // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
                 // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-                await contract.submitTransaction('createProject', req.body.projectid, req.body.username, req.body.projectname, req.body.description, req.body.startdate, req.body.enddate, req.body.finish);
+                await contract.submitTransaction('createProject', req.body.projectid, req.body.username, req.body.projectname, req.body.description, req.body.startdate, req.body.enddate);
                 console.log('Transaction has been submitted');
                 res.send('Transaction has been submitted');
                 // Disconnect from the gateway.
@@ -827,7 +827,7 @@ app.put('/api/changeProject/:project_index', async function (req, res, next) {
                 // Submit the specified transaction.
                 // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
                 // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-                await contract.submitTransaction('changeProject', req.params.project_index, req.body.username, req.body.projectname, req.body.description, req.body.stratdate, req.body.enddate, req.body.finish);
+                await contract.submitTransaction('changeProject', req.params.project_index, req.body.username, req.body.projectname, req.body.description, req.body.stratdate, req.body.enddate);
                 res.send('Transaction has been submitted');
                 // Disconnect from the gateway.
                 await gateway.disconnect();

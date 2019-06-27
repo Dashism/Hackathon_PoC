@@ -192,7 +192,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
                                         if (!JSON.stringify(data3).includes('PROJECTSKILL' + l.toString())) {
                                             this.pskill.projectskillid = 'PROJECTSKILL' + l.toString();
                                             this.dataService.add('addProjectskill', this.pskill).subscribe(res => {
-                                            return;
+                                                return;
                                             });
                                         }
                                     });
@@ -209,15 +209,18 @@ export class ProjetComponent implements OnInit, OnDestroy {
     }
 
     checkifskillspresent() {
+        let skillstring: String[] = [];
         for (let i = 0; i < this.f.skillset.value.length; i++) {
             this.dataService.getAll('skills')
                 .subscribe((data: {}) => {
-                    if (!JSON.stringify(data).includes('\\"level\\":\\"' + this.f.skillset.value[i].level + '\\",\\"skillname\\":\\"' + this.f.skillset.value[i].skillname + '\\"')) {
-                        console.log('cool')
-                        this.skillok = '2';
-                        return;
+                    if (JSON.stringify(data).includes('\\"level\\":\\"' + this.f.skillset.value[i].level + '\\",\\"skillname\\":\\"' + this.f.skillset.value[i].skillname + '\\"')) {
+                        skillstring.push('1');
                     } else {
-                        console.log('pascool');
+                        skillstring.push('2');
+                    }
+                    if (skillstring.includes('2')) {
+                        this.skillok = '2';
+                    } else {
                         this.skillok = '1';
                     }
                 });

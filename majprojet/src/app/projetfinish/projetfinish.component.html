@@ -68,42 +68,58 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="participantlist.length > 0" class="col-xl-6 col-md-6">
-                        <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
-                            [formGroup]="form">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
+                        <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto"
+                            name="projectskillForm" [formGroup]="projectskillForm">
+                            <mat-accordion formArrayName="projectskillList" class="col-md-12 col-xs-12">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            <strong>Compétences à noter</strong>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
 
-                            <div [formGroupName]="i" *ngFor="let item of participantlist; let i = index"
-                                [attr.data-index]="i">
-                                <mat-form-field class="col-xs-5">
-                                    <input matInput [(ngModel)]="item.username" formControlName="username"
-                                        placeholder="Nom du participant" required>
-                                </mat-form-field>
+                                    <div [formGroupName]="i" *ngFor="let projectskill of projectskilllist;let i = index"
+                                        [attr.data-index]="i">
 
-                                <mat-form-field class="col-xs-5">
-                                    <input matInput [(ngModel)]="item.skillname" formControlName="skillname"
-                                        placeholder="Compétence" required>
-                                </mat-form-field>
+                                        <mat-form-field class="col-md-12 col-xs-12">
+                                            <input matInput [(ngModel)]="projectskill.ausername"
+                                                formControlName="username" placeholder="Nom d'utilisateur" style="color:red;" readonly>
+                                        </mat-form-field >
 
-                                <mat-form-field class="col-xs-5">
-                                    <input matInput [(ngModel)]="item.grade" formControlName="grade"
-                                        placeholder="Note" required>
-                                    <!-- <mat-error
-                                        *ngIf="(form2.controls['skillset']).controls[i].get('level').hasError('pattern')">
-                                        Entier entre 1 et 5 uniquement !
-                                    </mat-error> -->
-                                </mat-form-field>
-                            </div>
+                                        <mat-form-field class="col-md-12 col-xs-12">
+                                            <input matInput [(ngModel)]="projectskill.skillname"
+                                                formControlName="skillname" placeholder="Nom de la compétence" readonly>
+                                        </mat-form-field>
 
-                            <br>
-                            <div class="button-row text-center" fxFlex="100">
-                                <button class="add-back-btn text-right btn-submit" mat-raised-button color="black"
-                                    (click)="onSubmit2()">Enregistrer</button>
-                            </div>
+                                        <mat-form-field class="col-md-12 col-xs-12">
+                                            <input matInput [(ngModel)]="projectskill.grade" formControlName="grade"
+                                                placeholder="Nôte de 1 à 20" required>
+                                            <mat-error
+                                                *ngIf="(projectskillForm.controls['projectskillList']).controls[i].get('grade').hasError('pattern')">
+                                                Entier entre 1 et 20 uniquement !
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="col-md-12 col-xs-12">
+                                            <input matInput formControlName="newskill"
+                                                placeholder="Nouvelle compétence aquise ?">
+                                        </mat-form-field>
+
+                                        <mat-form-field class="col-md-12 col-xs-12">
+                                            <input matInput formControlName="level"
+                                                placeholder="Quelle est le niveau de la compétence aquise ?">
+                                        </mat-form-field>
+
+                                        <div class="button-row text-center" fxFlex="100">
+                                            <button class="add-back-btn text-right btn-submit" mat-raised-button color="black"
+                                                (click)="onSubmit()">Enregistrer</button>
+                                        </div>
+
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
                         </form>
-                    </div>
-                    <div *ngIf="participantlist.length === 0" class="button-row text-center" fxFlex="100">
-                        <button class="add-back-btn text-right btn-submit" mat-raised-button color="black"
-                            (click)="loadparticipant()">Commencer la notation</button>
                     </div>
                 </div>
             </div>

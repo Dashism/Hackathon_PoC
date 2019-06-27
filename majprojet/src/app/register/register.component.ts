@@ -171,28 +171,30 @@ export class RegisterComponent implements OnInit, OnDestroy {
                 error => {
                     this.alertService.error(error);
                     this.loading = false;
-                });        
+                });
     }
 
     createagent() {
         this.dataService.getAll('agents')
             .subscribe((data: {}) => {
-                for (let i = 0; i < 13; i++) {
-                    if (!JSON.stringify(data).includes('AGENT' + i.toString())) {
-                        console.log(!JSON.stringify(data).includes('CAR' + i.toString()));
-                        this.str = i.toString();
-                        console.log(this.str);
-                        this.agent = new Agent();
-                        this.agent.agentid = 'AGENT' + this.str;
-                        this.agent.username = this.f.username.value;
-                        this.agent.coin = '3';
-                        this.agent.entity = '';
-                        this.agent.entitypoint = '0';
-                        this.agent.point = '0';
-                        console.log(this.agent);
-                        this.dataService.add('addAgent', this.agent).subscribe(res => {
-                        });
-                        return;
+                if (!JSON.stringify(data).includes(this.f.username.value)) {
+                    for (let i = 0; i < 13; i++) {
+                        if (!JSON.stringify(data).includes('AGENT' + i.toString())) {
+                            console.log(!JSON.stringify(data).includes('CAR' + i.toString()));
+                            this.str = i.toString();
+                            console.log(this.str);
+                            this.agent = new Agent();
+                            this.agent.agentid = 'AGENT' + this.str;
+                            this.agent.username = this.f.username.value;
+                            this.agent.coin = '3';
+                            this.agent.entity = '';
+                            this.agent.entitypoint = '0';
+                            this.agent.point = '0';
+                            console.log(this.agent);
+                            this.dataService.add('addAgent', this.agent).subscribe(res => {
+                            });
+                            return;
+                        }
                     }
                 }
             });

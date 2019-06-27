@@ -177,7 +177,8 @@ export class LoginComponent implements OnInit, OnDestroy {
                         this.router.navigate(['/admin']);
                         return;
                     } else {
-                        this.router.navigate(['/profil']);
+                        // this.router.navigate(['/profil']);
+                        this.router.navigate(['/shop']);
                         return;
                     }
                 },

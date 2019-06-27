@@ -25,7 +25,6 @@ import { Skill } from '../_models/skill';
 })
 export class ProfilComponent implements OnInit, OnDestroy {
     skill: Skill;
-    skilllist: Skill[] = [];
     actualagentnumber: string;
     str: string;
     diploma: Diploma;
@@ -41,11 +40,8 @@ export class ProfilComponent implements OnInit, OnDestroy {
     formErrors2: any;
     currentUser: User;
     currentUserSubscription: Subscription;
-    diplomaForm: any;
-    skillForm: any;
     private _unsubscribeAll: Subject<any>;
     constructor(
-        public formBuilder: FormBuilder,
         private alertService: AlertService,
         private userService: UserService,
         private authenticationService: AuthenticationService,
@@ -69,15 +65,11 @@ export class ProfilComponent implements OnInit, OnDestroy {
             coin: {},
             point: {},
             entity: {},
-            entitypoint: {}
+            entitypoint: {},
+            diploma: {},
+            skillset: {}
         };
         this._unsubscribeAll = new Subject();
-        this.diplomaForm = this.formBuilder.group({
-            'diplomaList': this.formBuilder.array([this.initDiplomas()])
-        });
-        this.skillForm = this.formBuilder.group({
-            'skillList': this.formBuilder.array([this.initSkills()])
-        });
         this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
             this.currentUser = user;
         });
@@ -107,7 +99,9 @@ export class ProfilComponent implements OnInit, OnDestroy {
             'coin': '',
             'point': '',
             'entity': ['', Validators.required],
-            'entitypoint': ''
+            'entitypoint': '',
+            'diploma': this._formBuilder2.array([this.initDiploma()]),
+            'skillset': this._formBuilder2.array([this.initSkill()])
         });
         this.form2.valueChanges
             .pipe(takeUntil(this._unsubscribeAll))
@@ -143,33 +137,61 @@ export class ProfilComponent implements OnInit, OnDestroy {
                                 this.respbc = data2;
                                 this.diploma = JSON.parse(this.respbc.response);
                                 this.diplomalist.push(this.diploma);
-                                console.log(this.diplomalist);
-                                this.diplomalist.forEach(
-                                    item => {
-                                        this.addDiplomasForm();
-                                    });
                             });
                     }
                 }
             });
-            this.dataService.getAll('skills')
-            .subscribe((data: {}) => {
-                for (let i = 0; i < 9; i++) {
-                    if (JSON.stringify(data).includes('\\"SKILL' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
-                        this.dataService.get('skill', 'SKILL' + i.toString())
-                            .subscribe(data2 => {
-                                this.respbc = data2;
-                                this.skill = JSON.parse(this.respbc.response);
-                                this.skilllist.push(this.skill);
-                                console.log(this.skilllist);
-                                this.skilllist.forEach(
-                                    item => {
-                                        this.addSkillsForm();
-                                    });
-                            });
-                    }
-                }
-            });
+        this.diploma = new Diploma();
+        this.diploma.diplomaname = 'Chimie';
+        this.diplomalisttest.push(this.diploma);
+        this.diploma = new Diploma();
+        this.diploma.diplomaname = 'Mathematique';
+        this.diplomalisttest.push(this.diploma);
+        this.diploma = new Diploma();
+        this.diploma.diplomaname = 'Physique';
+        this.diplomalisttest.push(this.diploma);
+        console.log(this.diplomalisttest);
+        console.log(this.form2.controls.diploma.controls);
+        this.diplomalisttest = this.form2.controls.diploma.controls;
+        console.log(this.form2.controls.diploma.controls); 
+        const count = ('Physique'.match(/is/g) || []).length;
+    }
+
+    initDiploma() {
+        return this._formBuilder2.group({
+            'diplomaname': ['', Validators.required]
+        });
+    }
+
+    addDiplomaFrom() {
+        const control = <FormArray>this.form2.controls['diploma'];
+        control.push(this.initDiploma());
+    }
+
+    deleteDiploma(index: number) {
+        const control = <FormArray>this.form2.controls['diploma'];
+        control.removeAt(index);
+    }
+
+    initSkill() {
+        return this._formBuilder2.group({
+            'skillname': ['', Validators.required],
+            'level': ['', Validators.pattern('[1-5]')]
+        });
+    }
+
+    addSkillForm() {
+        const control = <FormArray>this.form2.controls['skillset'];
+        control.push(this.initSkill());
+    }
+
+    addSkill() {
+        this.addSkillForm();
+    }
+
+    deleteSkill(index: number) {
+        const control = <FormArray>this.form2.controls['skillset'];
+        control.removeAt(index);
 
     }
 
@@ -194,16 +216,16 @@ export class ProfilComponent implements OnInit, OnDestroy {
     }
 
     onFormValuesChanged2(): void {
-        for (const field in this.formErrors2) {
-            if (!this.formErrors2.hasOwnProperty(field)) {
+        for (const field in this.formErrors) {
+            if (!this.formErrors.hasOwnProperty(field)) {
                 continue;
             }
             // Clear previous errors
-            this.formErrors2[field] = {};
+            this.formErrors[field] = {};
             // Get the control
             const control = this.form.get(field);
             if (control && control.dirty && !control.valid) {
-                this.formErrors2[field] = control.errors;
+                this.formErrors[field] = control.errors;
             }
         }
     }
@@ -369,49 +391,6 @@ export class ProfilComponent implements OnInit, OnDestroy {
 
     logout(): void {
         this.authenticationService.logout();
-    }
-
-    initDiplomas() {
-        return this.formBuilder.group({
-            'diplomaname': ['']
-        });
-    }
-
-    addDiploma() {
-        const diploma = new Diploma();
-        this.diplomalist.push(diploma);
-        this.addDiplomasForm();
-    }
-
-    deleteDiploma(index: number) {
-        this.diplomalist.splice(index, 1);
-    }
-
-    addDiplomasForm() {
-        const control = <FormArray>this.diplomaForm.controls['diplomaList'];
-        control.push(this.initDiplomas());
-    }
-
-    initSkills() {
-        return this.formBuilder.group({
-            'skillname': [''],
-            'level': ['', Validators.pattern('[1-5]')]
-        });
-    }
-
-    addSkill() {
-        const skill = new Skill();
-        this.skilllist.push(skill);
-        this.addSkillsForm();
-    }
-
-    deleteSkill(index: number) {
-        this.skilllist.splice(index, 1);
-    }
-
-    addSkillsForm() {
-        const control1 = <FormArray>this.skillForm.controls['skillList'];
-        control1.push(this.initSkills());
     }
 }
 

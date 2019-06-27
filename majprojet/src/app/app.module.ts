@@ -69,6 +69,10 @@ const appRoutes: Routes = [
         component: HomeComponent
     },
     {
+        path: 'shop',
+        component: ShopComponent
+    },
+    {
         path: 'login',
         component: LoginComponent
     },

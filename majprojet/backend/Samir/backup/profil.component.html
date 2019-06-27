@@ -121,8 +121,8 @@
                             </div>
 
                             <div class="button-row text-center" fxFlex="100">
-                                <button class="add-back-btn text-right btn-submit" mat-raised-button color="black"
-                                    (click)="onSubmit()">Enregistrer</button>
+                                <button class="add-back-btn text-right btn-submit" mat-raised-button
+                                    color="black" (click)="onSubmit()">Enregistrer</button>
                             </div>
                         </form>
                     </div>
@@ -145,8 +145,8 @@
                                 </div>
                                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
                                     <mat-form-field class="col-md-12 col-xs-12">
-                                        <input matInput [(ngModel)]="agent.entity" placeholder="Numero de votre entité"
-                                            formControlName="entity" required>
+                                        <input matInput [(ngModel)]="agent.entity" placeholder="Numero de votre entité" formControlName="entity"
+                                            required>
                                         <mat-error *ngIf="formErrors2.entity.required">
                                             Vous devez remplir votre code entité !
                                         </mat-error>
@@ -159,67 +159,66 @@
                                             style="color:red;" readonly>
                                     </mat-form-field>
                                 </div>
-                            </form>
 
-                            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
-                                <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto"
-                                    name="diplomaForm" [formGroup]="diplomaForm">
-                                    <mat-accordion formArrayName="diplomaList" class="col-md-12 col-xs-12">
+                                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
+                                    <mat-accordion formArrayName="diploma" class="col-md-12 col-xs-12">
                                         <mat-expansion-panel>
                                             <mat-expansion-panel-header>
                                                 <mat-panel-title>
-                                                    <strong>Vos diplômes</strong>
+                                                    <strong>Vos diplomes</strong>
                                                 </mat-panel-title>
                                             </mat-expansion-panel-header>
 
-                                            <div [formGroupName]="i" *ngFor="let diploma of diplomalist;let i = index"
+                                            <div [formGroupName]="i"
+                                                *ngFor="let item of form2.controls.diploma.controls; let i = index"
                                                 [attr.data-index]="i">
                                                 <mat-form-field style="width: 80%">
-                                                    <input matInput [(ngModel)]="diploma.diplomaname"
-                                                        formControlName="diplomaname" placeholder="Nom du diplôme"
+                                                    <input matInput [(ngModel)]="item.diplomaname"
+                                                        formControlName="diplomaname" placeholder="Nom du diplome"
                                                         required>
                                                 </mat-form-field>
-
                                                 <button mat-icon-button (click)="deleteDiploma(i)">
                                                     <mat-icon>cancel</mat-icon>
                                                 </button>
+
                                             </div>
-                                            <button mat-button (click)="addDiploma()">
+
+                                            <button mat-button (click)="addDiplomaFrom()">
                                                 <mat-icon>add_circle_outline</mat-icon>
                                             </button>
 
                                         </mat-expansion-panel>
                                     </mat-accordion>
-                                </form>
-                            </div>
+                                </div>
 
-                            <br>
+                                <br>
 
-                            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
-                                <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto"
-                                name="skillForm" [formGroup]="skillForm">
-                                    <mat-accordion formArrayName="skillList" class="col-md-12 col-xs-12">
+
+
+
+                                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
+                                    <mat-accordion formArrayName="skillset" class="col-md-12 col-xs-12">
                                         <mat-expansion-panel>
                                             <mat-expansion-panel-header>
                                                 <mat-panel-title>
-                                                    <strong>Tenants</strong>
+                                                    <strong>Vos compétences</strong>
                                                 </mat-panel-title>
                                             </mat-expansion-panel-header>
 
-                                            <div [formGroupName]="i" *ngFor="let skill of skilllist;let i = index"
+                                            <div [formGroupName]="i"
+                                                *ngFor="let item of form2.controls.skillset.controls; let i = index"
                                                 [attr.data-index]="i">
                                                 <mat-form-field class="col-xs-5">
-                                                    <input matInput [(ngModel)]="skill.skillname"
+                                                    <input matInput [(ngModel)]="item.skillname"
                                                         formControlName="skillname" placeholder="Nom de la compétence"
                                                         required>
                                                 </mat-form-field>
 
-
                                                 <mat-form-field>
-                                                    <input matInput [(ngModel)]="skill.level" formControlName="level"
+                                                    <input matInput [(ngModel)]="item.level" formControlName="level"
                                                         placeholder="Niveau de 1 à 5" required>
                                                     <mat-error
-                                                        *ngIf="(skillForm.controls['skillList']).controls[i].get('level').hasError('pattern')">
+                                                        *ngIf="(form2.controls['skillset']).controls[i].get('level').hasError('pattern')">
                                                         Entier entre 1 et 5 uniquement !
                                                     </mat-error>
                                                 </mat-form-field>
@@ -227,20 +226,22 @@
                                                 <button mat-icon-button (click)="deleteSkill(i)">
                                                     <mat-icon>cancel</mat-icon>
                                                 </button>
+
                                             </div>
-                                            <button mat-button (click)="addSkill()">
+
+                                            <button mat-button (click)="addSkillForm()">
                                                 <mat-icon>add_circle_outline</mat-icon>
                                             </button>
 
                                         </mat-expansion-panel>
                                     </mat-accordion>
-                                </form>
-                            </div>
-                            <br>
-                            <div class="button-row text-center" fxFlex="100">
-                                <button class="add-back-btn text-right btn-submit" mat-raised-button color="black"
-                                    (click)="onSubmit2()">Enregistrer</button>
-                            </div>
+                                </div>
+                                <br>
+                                <div class="button-row text-center" fxFlex="100">
+                                    <button class="add-back-btn text-right btn-submit" mat-raised-button
+                                        color="black" (click)="onSubmit2()">Enregistrer</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

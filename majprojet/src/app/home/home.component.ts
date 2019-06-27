@@ -55,10 +55,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     navigation: any;
     imageUrls: (string | IImage)[] = [
         { url: 'assets/images/6.png', caption: 'Bienvenue dans le <br/> marché des compétences !' },
-        { url: 'assets/images/11.png', caption: 'Vous avez des compétences ?' },
-        { url: 'assets/images/12.png', caption: 'Vous souhaitez rejoindre <br/> un vrai réseau ?' },
+        { url: 'assets/images/14.png', caption: 'Vous avez des compétences ?' },
+        { url: 'assets/images/16.png', caption: 'Vous souhaitez rejoindre <br/> un vrai réseau ?' },
         { url: 'assets/images/3.png', caption: 'Vous avez besoin de renfort ?' },
-        { url: 'assets/images/10.png', caption: 'Vous ne savez pas  <br/> à qui vous adresser ?' },
+        { url: 'assets/images/17.png', caption: 'Vous ne savez pas  <br/> à qui vous adresser ?' },
         { url: 'assets/images/13.png', caption: '<br/><br/><br/><br/>Vous êtes au bon endroit ! Nous avons besoin de vous !' },
     ];
     height: string = '100vh';

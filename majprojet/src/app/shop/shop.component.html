@@ -1,80 +1,62 @@
-<div class="navbar custom-navbar navbar-fixed-top" role="navigation">
-    <div class="container">
+<form [formGroup]="diplomaForm">
+    <mat-accordion formArrayName="diplomaList">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <strong>Tenants</strong>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
 
-        <!-- NAVBAR HEADER -->
-        <div class="navbar-header">
-            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" (click)="openMenu()">
-                <span class="icon icon-bar"></span>
-                <span class="icon icon-bar"></span>
-                <span class="icon icon-bar"></span>
+            <div [formGroupName]="i" *ngFor="let diploma of diplomalist;let i = index" [attr.data-index]="i">
+                <mat-form-field>
+                    <input matInput [(ngModel)]="diploma.diplomaname" formControlName="diplomaname"
+                        placeholder="Nom du diplome" required>
+                </mat-form-field>
+
+                <button mat-icon-button (click)="deleteDiploma(i)">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </div>
+            <button mat-button (click)="addDiploma()">
+                <mat-icon>add_circle_outline</mat-icon>
             </button>
-            <!-- lOGO -->
-            <a [routerLink]="['/']" class="navbar-brand">Marché des compétences</a>
-        </div>
 
-        <!-- MENU LINKS -->
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a [routerLink]="['/']" class="smoothScroll">Acceuil</a></li>
-                <li><a [routerLink]="['/about']" class="smoothScroll">A propos</a></li>
-                <li><a [routerLink]="['/shop']" class="smoothScroll">Magasin</a></li>
-                <li><a [routerLink]="['/contact-us']" class="smoothScroll">Nous contacter</a></li>
-                <li><a [routerLink]="['/help']" class="smoothScroll">Aide</a></li>
-                <li><a [routerLink]="['/login']" class="smoothScroll">Se connecter</a></li>
-                <li><a [routerLink]="['/register']" class="smoothScroll">S'enregistrer</a></li>
-                <li><a (click)="logout()" class="smoothScroll">Se déconnecter</a></li>
-            </ul>
-        </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</form>
 
-    </div>
-</div>
+<form [formGroup]="skillForm">
+    <mat-accordion formArrayName="skillList" class="col-md-12 col-xs-12">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <strong>Tenants</strong>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
 
+            <div [formGroupName]="i" *ngFor="let skill of skilllist;let i = index" [attr.data-index]="i">
+                <mat-form-field class="col-xs-5">
+                    <input matInput [(ngModel)]="skill.skillname" formControlName="skillname"
+                        placeholder="Nom de la compétence" required>
+                </mat-form-field>
 
 
-<section class="video-step">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-xl-12 col-sm-12 col-md-12 text-center">
-                <div class="page-title">
-                    <h1>Shop With Us</h1>
-                </div>
+                <mat-form-field>
+                    <input matInput [(ngModel)]="skill.level" formControlName="level" placeholder="Niveau de 1 à 5"
+                        required>
+                    <mat-error *ngIf="(skillForm.controls['skillList']).controls[i].get('level').hasError('pattern')">
+                        Entier entre 1 et 5 uniquement !
+                    </mat-error>
+                </mat-form-field>
+
+                <button mat-icon-button (click)="deleteSkill(i)">
+                    <mat-icon>cancel</mat-icon>
+                </button>
             </div>
-        </div>
-    </div>
-</section>
-<section class="cms-main">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-xs-12">
-                <mat-card class="example-card">
-                    <h1>Agent</h1>
-                    <mat-card-actions>
-                        <h3>getall</h3>
-                        <button mat-button (click)="getAgents()">LIKE</button>
-                        <h3>get</h3>
-                        <button mat-button (click)="getAgent(AGENT0)">LIKE</button>
-                        <h3>update</h3>
-                        <button mat-button (click)="updateAgent()">LIKE</button>
-                        <h3>create</h3>
-                        <button mat-button (click)="addAgent()">LIKE</button>
-                    </mat-card-actions>
-                </mat-card>
-            </div>
-            <div class="col-md-4 col-xs-12">
-                <mat-card class="example-card">
-                    <h1>Car</h1>
-                    <mat-card-actions>
-                        <h3>getall</h3>
-                        <button mat-button (click)="getCars()">LIKE</button>
-                        <h3>get</h3>
-                        <button mat-button (click)="getCar(CAR0)">LIKE</button>
-                        <h3>update</h3>
-                        <button mat-button (click)="updateCar()">LIKE</button>
-                        <h3>create</h3>
-                        <button mat-button (click)="addCar()">LIKE</button>
-                    </mat-card-actions>
-                </mat-card>
-            </div>
-        </div>
-    </div>
-</section>
+            <button mat-button (click)="addSkill()">
+                <mat-icon>add_circle_outline</mat-icon>
+            </button>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+</form>

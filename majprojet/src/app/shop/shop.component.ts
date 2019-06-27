@@ -1,105 +1,127 @@
-import { Component, OnInit } from '@angular/core';
-import * as $ from 'jquery';
-import { AlertService, AuthenticationService } from '../_services';
-import { DataService } from '../data.service';
-import { HttpModule } from '@angular/http';
-import { Http, Response, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { Agent } from '../_models/agent';
+import { Component } from '@angular/core';
+import { Validators, FormArray, FormBuilder } from '@angular/forms';
 import { Diploma } from '../_models/diploma';
-import { Skill } from '../_models/skill';
-import { Project } from '../_models/project';
-import { Car } from '../_models/car';
+import { DataService } from '../data.service';
 import { Responsebc } from '../_models/responsebc';
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
-import { throwError } from 'rxjs';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { AuthenticationService } from '../_services';
+import { User } from '../_models';
+import { Subscription } from 'rxjs';
+import { Skill } from '../_models/skill';
 
 @Component({
-    selector: 'app-shop',
+    selector: 'my-shop',
     templateUrl: './shop.component.html',
     styleUrls: ['./shop.component.scss']
 })
-export class ShopComponent implements OnInit {
-    car: Car;
+export class ShopComponent {
+    skill: Skill;
+    skills: Skill[] = [
+        { grade: '', level: '3', skillname: 'labs1', username: '2' },
+        { grade: '', level: '3', skillname: 'labs1', username: '2' },
+        { grade: '', level: '3', skillname: 'labs1', username: '2' },
+        { grade: '', level: '3', skillname: 'labs1', username: '2' }
+    ];
+    skilllist: Skill[] = [
+        { skillname: 'labs1', username: '2', grade: '', level: '3' },
+        { skillname: 'labs2', username: '2', grade: '', level: '3' },
+        { skillname: 'labs3', username: '2', grade: '', level: '3' },
+        { skillname: 'Olabel4', username: '3', grade: '', level: '3' }
+    ];
+    diploma: Diploma;
     respbc: Responsebc;
-    private resolveSuffix = '?resolve=true';
-    private headers: Headers;
-    private url = 'http://localhost:3000/api/';
-    constructor(private http: HttpClient, private authenticationService: AuthenticationService, private dataService: DataService<any>) {
-        this.openMenu();
-        this.headers = new Headers();
-        this.headers.append('Content-Type', 'application/json');
-        this.headers.append('Accept', 'application/json');
-    };
+    diplomas: Diploma[] = [
+        { diplomaname: 'labs1', username: '2' },
+        { diplomaname: 'labs2', username: '2' },
+        { diplomaname: 'labs3', username: '2' },
+        { diplomaname: 'Olabel4', username: '3' }
+    ];
+    diplomalist: Diploma[] = [];
+    diplomaForm: any;
+    skillForm: any;
+    currentUser: User;
+    currentUserSubscription: Subscription;
+    constructor(
+        public formBuilder: FormBuilder,
+        private authenticationService: AuthenticationService,
+        private dataService: DataService<any>
+    ) {
+        this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
+            this.currentUser = user;
+        });
+        this.diplomaForm = this.formBuilder.group({
+            'diplomaList': this.formBuilder.array([this.initDiplomas()])
+        });
+        this.skillForm = this.formBuilder.group({
+            'skillList': this.formBuilder.array([this.initSkills()])
+        });
+    }
 
     ngOnInit() {
-    }
-
-    openMenu() {
-        $('body').removeClass('noScroll');
-        if ($('.collapse').hasClass('collapse-active')) {
-            $('.collapse').removeClass('collapse-active');
-        }
-        else {
-            $('.collapse').addClass('collapse-active');
-        }
-    }
-
-    logout(): void {
-        this.authenticationService.logout();
-    }
-
-    getAgent(key: string) {
-        this.dataService.get('agents', key)
-            .subscribe(data => {
-                console.log(data);
-            });
-    }
-
-    getAgents() {
-        this.dataService.getAll('agents')
+        this.dataService.getAll('diplomas')
             .subscribe((data: {}) => {
-                console.log(data);
+                for (let i = 0; i < 9; i++) {
+                    if (JSON.stringify(data).includes('\\"DIPLOMA' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
+                        this.dataService.get('diploma', 'DIPLOMA' + i.toString())
+                            .subscribe(data2 => {
+                                this.respbc = data2;
+                                this.diploma = JSON.parse(this.respbc.response);
+                                this.diplomalist.push(this.diploma);
+                                console.log(this.diplomalist);
+                                this.diplomalist.forEach(
+                                    item => {
+                                        this.addDiplomasForm();
+                                    });
+                            });
+                    }
+                }
+            });
+
+        this.skilllist.forEach(
+            item => {
+                this.addSkillsForm();
             });
     }
 
-    updateAgent(key: string, json: any) {
-        this.dataService.update('agent', key, JSON.stringify(json))
-        .subscribe( res => {
-            console.log(res);
+    initDiplomas() {
+        return this.formBuilder.group({
+            'diplomaname': ['']
         });
     }
 
-    addAgent(json: any) {
-        this.dataService.add('agent', JSON.stringify(json))
-        .subscribe( res => {
-            console.log(res);
+    addDiploma() {
+        const diploma = new Diploma();
+        this.diplomalist.push(diploma);
+        this.addDiplomasForm();
+    }
+
+    deleteDiploma(index: number) {
+        this.diplomalist.splice(index, 1);
+    }
+
+    addDiplomasForm() {
+        const control = <FormArray>this.diplomaForm.controls['diplomaList'];
+        control.push(this.initDiplomas());
+    }
+
+    initSkills() {
+        return this.formBuilder.group({
+            'skillname': [''],
+            'level': ['', Validators.pattern('[1-5]')]
         });
     }
 
-    getCars() {
-        this.dataService.getAll('queryallcars')
-            .subscribe((data: {}) => {
-                console.log(data);
-            });
+    addSkill() {
+        const skill = new Skill();
+        this.skilllist.push(skill);
+        this.addSkillsForm();
     }
 
-    getCar(key: string) {
-        this.dataService.get('query', 'CAR0')
-            .subscribe(data => {
-                this.respbc = data;
-                console.log(this.respbc);
-                console.log(this.respbc.response);
-                this.car = JSON.parse(this.respbc.response);
-                console.log(this.car.colour);
-                console.log(this.car.make);
-                console.log(this.car.model);
-                console.log(this.car.owner);
-            });
+    deleteSkill(index: number) {
+        this.skilllist.splice(index, 1);
     }
 
-
+    addSkillsForm() {
+        const control1 = <FormArray>this.skillForm.controls['skillList'];
+        control1.push(this.initSkills());
+    }
 }

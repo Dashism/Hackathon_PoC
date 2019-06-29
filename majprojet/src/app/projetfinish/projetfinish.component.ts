@@ -25,6 +25,7 @@ import { Participant } from '../_models/participant';
     styleUrls: ['./projetfinish.component.scss']
 })
 export class ProjetfinishComponent implements OnInit, OnDestroy {
+    entitylist: String[] = [];
     agent: Agent;
     projectskill: Projectskill;
     projectskilllist: Projectskill[] = [];
@@ -74,32 +75,35 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.today = new Date();
-        for (let i = 0; i < 13; i++) {
+        for (let i = 0; i < 99; i++) {
             this.dataService.get('project', 'PROJECT' + i.toString())
                 .subscribe(data => {
                     if (JSON.stringify(data).includes('\\"ausername\\":\\"' + this.currentUser.username + '\\"') && !JSON.stringify(data).includes('\\"finish\\":\\"1\\"')) {
                         this.respbc = data;
                         this.project = new Project();
                         this.project = JSON.parse(this.respbc.response);
-                        this.projectlist.push(this.project);
-                        console.log(this.projectlist);
-                        for (let l = 0; l < this.projectlist.length; l++) {
-                            console.log('test');
-                            for (let k = 0; k < 19; k++) {
-                                this.dataService.get('projectskill', 'PROJECTSKILL' + k.toString())
-                                    .subscribe(data4 => {
-                                        if (JSON.stringify(data4).includes('\\"projectname\\":\\"' + this.projectlist[l].projectname + '\\"')) {
-                                            this.respbc = data4;
-                                            this.projectskill = new Projectskill();
-                                            this.projectskill = JSON.parse(this.respbc.response);
-                                            this.projectskilllist.push(this.projectskill);
-                                            console.log(this.projectskilllist);
-                                            this.projectskilllist.forEach(
-                                                item => {
-                                                    this.addProjectskillsForm();
-                                                });
-                                        }
-                                    });
+                        let enddate = new Date(this.project.enddate);
+                        if (enddate < this.today) {
+                            this.projectlist.push(this.project);
+                            console.log(this.projectlist);
+                            for (let l = 0; l < this.projectlist.length; l++) {
+                                console.log('test');
+                                for (let k = 0; k < 99; k++) {
+                                    this.dataService.get('projectskill', 'PROJECTSKILL' + k.toString())
+                                        .subscribe(data4 => {
+                                            if (JSON.stringify(data4).includes('\\"projectname\\":\\"' + this.projectlist[l].projectname + '\\"')) {
+                                                this.respbc = data4;
+                                                this.projectskill = new Projectskill();
+                                                this.projectskill = JSON.parse(this.respbc.response);
+                                                this.projectskilllist.push(this.projectskill);
+                                                console.log(this.projectskilllist);
+                                                this.projectskilllist.forEach(
+                                                    item => {
+                                                        this.addProjectskillsForm();
+                                                    });
+                                            }
+                                        });
+                                }
                             }
                         }
                     }
@@ -113,41 +117,6 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
         this.currentUserSubscription.unsubscribe();
     }
 
-    loadparticipant() {
-        for (let l = 0; l < this.projectlist.length; l++) {
-            console.log('test');
-            for (let k = 0; k < 19; k++) {
-                // this.dataService.get('participant', 'PARTICIPANT' + k.toString())
-                //     .subscribe(data3 => {
-                //         console.log('\\"projectname\\":\\"' + this.projectlist[l].projectname + '\\"');
-                //         console.log(JSON.stringify(data3).includes('\\"projectname\\":\\"' + this.projectlist[l].projectname + '\\"'));
-                //         if (JSON.stringify(data3).includes('\\"projectname\\":\\"' + this.projectlist[l].projectname + '\\"')) {
-                //             console.log('2222222222');
-                //             this.respbc = data3;
-                //             this.participant = new Participant();
-                //             this.participant = JSON.parse(this.respbc.response);
-                //             this.participantlist.push(this.participant);
-                //             console.log(this.participantlist + '2222222222');
-                //         }
-                //     });
-                this.dataService.get('projectskill', 'PROJECTSKILL' + k.toString())
-                    .subscribe(data4 => {
-                        if (JSON.stringify(data4).includes('\\"projectname\\":\\"' + this.projectlist[l].projectname + '\\"')) {
-                            this.respbc = data4;
-                            this.projectskill = new Projectskill();
-                            this.projectskill = JSON.parse(this.respbc.response);
-                            this.projectskilllist.push(this.projectskill);
-                            console.log(this.projectskilllist + '3333333333');
-                            this.projectskilllist.forEach(
-                                item => {
-                                    this.addProjectskillsForm();
-                                });
-                        }
-                    });
-            }
-        }
-    }
-
     openMenu() {
         $('body').removeClass('noScroll');
         if ($('.collapse').hasClass('collapse-active')) {
@@ -158,50 +127,70 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
         }
     }
 
-    onSubmit() {
+    async onSubmit() {
+        this.alertService.error('Enregistrement sur la BlockChain ...', false);
+
+        // Projet finish
         for (let l = 0; l < this.projectlist.length; l++) {
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 99; i++) {
                 this.dataService.get('project', 'PROJECT' + i.toString())
                     .subscribe(data => {
                         if (JSON.stringify(data).includes('\\"ausername\\":\\"' + this.currentUser.username + '\\"') && JSON.stringify(data).includes('\\"finish\\":\\"0\\",\\"projectname\\":\\"' + this.projectlist[i].projectname + '\\"')) {
                             this.respbc = data;
+                            this.project = new Project();
                             this.project = JSON.parse(this.respbc.response);
                             this.project.projectid = 'PROJECT' + i.toString();
                             this.project.finish = '1';
+                            this.project.username = this.currentUser.username;
+                            console.log(this.project);
                             this.dataService.add('addProject', this.project).subscribe(res => {
                             });
                         }
                     });
             }
         }
+
+        await delay(3000);
+
+        // point agent createur
         this.dataService.getAll('agents')
             .subscribe((data: {}) => {
-                for (let i = 0; i < 20; i++) {
+                for (let i = 0; i < 99; i++) {
                     if (JSON.stringify(data).includes('\\"AGENT' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
                         this.dataService.get('agent', 'AGENT' + i.toString())
                             .subscribe(data2 => {
                                 this.respbc = data2;
+                                this.agent = new Agent();
                                 this.agent = JSON.parse(this.respbc.response);
+                                this.agent.username = this.agent.ausername;
                                 this.agent.agentid = 'AGENT' + i.toString();
                                 this.agent.coin = (+this.agent.coin - 1).toString();
+                                console.log(this.agent);
                                 this.dataService.add('addAgent', this.agent).subscribe(res => {
                                 });
                             });
                     }
                 }
             });
+
+        await delay(3000);
+
+        // point participants
         for (let l = 0; l < this.f.projectskillList.value.length; l++) {
             this.dataService.getAll('agents')
                 .subscribe((data: {}) => {
-                    for (let i = 0; i < 20; i++) {
+                    for (let i = 0; i < 99; i++) {
                         if (JSON.stringify(data).includes('\\"AGENT' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.f.projectskillList.value[l].username + '\\"')) {
                             this.dataService.get('agent', 'AGENT' + i.toString())
-                                .subscribe(data2 => {
-                                    this.respbc = data2;
+                                .subscribe(data3 => {
+                                    this.respbc = data3;
+                                    this.agent = new Agent();
                                     this.agent = JSON.parse(this.respbc.response);
+                                    this.agent.username = this.agent.ausername;
                                     this.agent.agentid = 'AGENT' + i.toString();
                                     this.agent.coin = (+this.agent.coin + 1).toString();
                                     this.agent.point = (+this.agent.point + 1).toString();
+                                    console.log(this.agent);
                                     this.dataService.add('addAgent', this.agent).subscribe(res => {
                                     });
                                 });
@@ -210,48 +199,114 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
                 });
         }
 
-        for (let k = 0; k < this.f.projectskillList.value.length; k++) {
-            for (let i = 0; i < 20; i++) {
-                this.dataService.get('skill', 'SKILL' + i.toString())
-                    .subscribe(data2 => {
-                        if (JSON.stringify(data2).includes('')) {
-                            this.respbc = data2;
+        await delay(3000);
+
+        //entity number
+        for (let l = 0; l < this.f.projectskillList.value.length; l++) {
+            this.dataService.getAll('agents')
+                .subscribe((data: {}) => {
+                    for (let i = 0; i < 99; i++) {
+                        if (JSON.stringify(data).includes('\\"AGENT' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.f.projectskillList.value[l].username + '\\"')) {
+                            this.dataService.get('agent', 'AGENT' + i.toString())
+                                .subscribe(data4 => {
+                                    this.respbc = data4;
+                                    this.agent = new Agent();
+                                    this.agent = JSON.parse(this.respbc.response);
+                                    this.entitylist.push(this.agent.entity);
+                                });
+                        }
+                    }
+                });
+        }
+
+        await delay(3000);
+        console.log(this.entitylist);
+
+        // entity point
+        for (let l = 0; l < this.entitylist.length; l++) {
+            for (let i = 0; i < 99; i++) {
+                this.dataService.get('agent', 'AGENT' + i.toString())
+                    .subscribe(data5 => {
+                        if (JSON.stringify(data5).includes('\\"entity\\":\\"' + this.entitylist[l].toString() + '\\"')) {
+                            this.respbc = data5;
+                            this.agent = new Agent();
                             this.agent = JSON.parse(this.respbc.response);
+                            this.agent.username = this.agent.ausername;
                             this.agent.agentid = 'AGENT' + i.toString();
-                            this.agent.coin = (+this.agent.coin + 1).toString();
-                            this.agent.point = (+this.agent.point + 1).toString();
-                            this.dataService.add('addSkill', this.agent).subscribe(res => {
+                            this.agent.entitypoint = (+this.agent.entitypoint + 1).toString();
+                            console.log(this.agent);
+                            this.dataService.add('addAgent', this.agent).subscribe(res => {
                             });
                         }
                     });
             }
         }
 
-        this.dataService.getAll('agents')
-            .subscribe((data: {}) => {
-                for (let i = 0; i < 20; i++) {
-                    if (JSON.stringify(data).includes('\\"AGENT' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
-                        this.dataService.get('agent', 'AGENT' + i.toString())
-                            .subscribe(data2 => {
-                                this.respbc = data2;
-                                this.agent = JSON.parse(this.respbc.response);
-                                this.agent.entity = (+this.agent.coin + 1).toString();
-                                this.dataService.add('addAgent', this.agent).subscribe(res => {
+        await delay(3000);
+
+        // grade
+        let l = 0;
+        while (l < this.f.projectskillList.value.length) {
+            this.dataService.getAll('skills')
+                .subscribe((data: {}) => {
+                    for (let i = 0; i < 99; i++) {
+                        if (JSON.stringify(data).includes('\\"Key\\":\\"SKILL' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.f.projectskillList.value[l].username + '\\",\\"bskillname\\":\\"' + this.f.projectskillList.value[l].skillname + '\\"')) {
+                            this.dataService.get('skill', 'SKILL' + i.toString())
+                                .subscribe(data4 => {
+                                    this.respbc = data4;
+                                    this.skill = new Skill();
+                                    this.skill = JSON.parse(this.respbc.response);
+                                    this.skill.username = this.skill.ausername;
+                                    this.skill.skillname = this.skill.bskillname;
+                                    this.skill.level = this.skill.clevel;
+                                    this.skill.grade = this.f.projectskillList.value[l].grade;
+                                    this.skill.skillid = 'SKILL' + i.toString();
+                                    console.log(this.skill);
+                                    this.dataService.add('addSkill', this.skill).subscribe(res => {
+                                    });
                                 });
-                            });
+                        }
                     }
-                    if (JSON.stringify(data).includes('\"entity\":\"' + this.agent.entity + '\"')) {
-                        this.dataService.get('agent', 'AGENT' + i.toString())
-                            .subscribe(data2 => {
-                                this.respbc = data2;
-                                this.agent = JSON.parse(this.respbc.response);
-                                this.agent.entity = (+this.agent.coin + 1).toString();
-                                this.dataService.add('addAgent', this.agent).subscribe(res => {
-                                });
-                            });
-                    }
-                }
-            });
+                });
+            await delay(6000);
+            l++;
+        }
+
+        await delay(3000);
+
+        //new competence
+        let m = 0;
+        while (m < this.f.projectskillList.value.length) {
+            if (this.f.projectskillList.value[m].newskill !== '' && this.f.projectskillList.value[m].level !== '') {
+                this.skill = new Skill();
+                this.skill.username = this.f.projectskillList.value[m].username;
+                this.skill.skillname = this.f.projectskillList.value[m].newskill;
+                this.skill.level = this.f.projectskillList.value[m].level;
+                this.skill.grade = '';
+                this.dataService.getAll('skills')
+                    .subscribe((data: {}) => {
+                        let y = 0;
+                        while (JSON.stringify(data).includes('SKILL' + y.toString())) {
+                            y++;
+                        }
+                        this.skill.skillid = 'SKILL' + y.toString();
+                        console.log(this.skill);
+                        this.dataService.add('addSkill', this.skill).subscribe(res => {
+                        });
+                    });
+            }
+            await delay(4000);
+            m++;
+        }
+
+        await delay(1);
+        this.alertService.success('Enregistrement de la notation sur la BlockChain reussi !', false);
+
+        await delay(1000);
+        this.alertService.success('Merci de votre participation !', false);
+
+        // await delay(1000);
+        // this.router.navigate(['/profil']);
 
     }
 
@@ -276,4 +331,8 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
 
     get f() { return this.projectskillForm.controls; }
 
+}
+
+function delay(timeInMillis: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(() => resolve(), timeInMillis));
 }

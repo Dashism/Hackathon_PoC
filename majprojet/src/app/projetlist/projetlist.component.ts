@@ -54,7 +54,7 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
         });
     };
 
-    ngOnInit() {
+    async ngOnInit() {
         this.dataService.getAll('projects')
             .subscribe((data: {}) => {
                 for (let i = 0; i < 9; i++) {
@@ -97,10 +97,9 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
                     }
                 });
         }
-    }
 
+        await delay(2500);
 
-    loadparticipant() {
         for (let i = 0; i < this.projectlist.length; i++) {
             for (let k = 0; k < 9; k++) {
                 this.dataService.get('participant', 'PARTICIPANT' + k.toString())
@@ -186,3 +185,6 @@ export class ProjetlistComponent implements OnInit, OnDestroy {
     }
 }
 
+function delay(timeInMillis: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(() => resolve(), timeInMillis));
+}

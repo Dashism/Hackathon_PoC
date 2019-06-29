@@ -209,7 +209,7 @@
                                             <div [formGroupName]="i" *ngFor="let skill of skilllist;let i = index"
                                                 [attr.data-index]="i">
                                                 <mat-form-field class="col-xs-5">
-                                                    <input matInput [(ngModel)]="skill.skillname"
+                                                    <input matInput [(ngModel)]="skill.bskillname"
                                                         formControlName="skillname" placeholder="Nom de la compétence"
                                                         required>
                                                 </mat-form-field>

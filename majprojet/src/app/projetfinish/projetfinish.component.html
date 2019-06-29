@@ -43,82 +43,69 @@
         <div class="row">
             <div class="contact-us">
                 <div class="row">
-                    <div class="col-xl-6 col-md-6">
+                    <div class="col-xl-12 col-md-12">
                         <div *ngFor="let project of projectlist;let i = index" [attr.data-index]="i">
                             <h2 style="color:blue;">{{project.projectname}}</h2>
                             <h3>{{project.description}}</h3>
-                            <h4 style="color:green;">{{project.startdate}}</h4>
-                            <h4 style="color:red;">{{project.enddate}}</h4>
-                            <br>
-                            <div *ngFor="let participant of participantlist;let k = index" [attr.data-index]="k">
-                                <h2 *ngIf="participant.projectname === project.projectname" style="color:skyblue;">
-                                    Non d'utilisateur du participant : {{participant.ausername}}</h2>
-                                <div *ngFor="let u of users;let l = index" [attr.data-index]="l">
-                                    <h4 *ngIf="participant.projectname === project.projectname && participant.ausername === u.username"
-                                        style="color:orangered">Nom : {{u.name}}
-                                    </h4>
-                                    <h4 *ngIf="participant.projectname === project.projectname && participant.ausername === u.username"
-                                        style="color:orangered">Prenom : {{u.firstname}}</h4>
-                                    <h4 *ngIf="participant.projectname === project.projectname && participant.ausername === u.username"
-                                        style="color:orangered">Email : {{u.email}}</h4>
-                                    <h4 *ngIf="participant.projectname === project.projectname && participant.ausername === u.username"
-                                        style="color:orangered">Téléphone : {{u.mobile}}</h4>
-                                    <br>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
                         <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto"
                             name="projectskillForm" [formGroup]="projectskillForm">
                             <mat-accordion formArrayName="projectskillList" class="col-md-12 col-xs-12">
-                                <mat-expansion-panel>
+                                <!-- <mat-expansion-panel>
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
                                             <strong>Compétences à noter</strong>
                                         </mat-panel-title>
-                                    </mat-expansion-panel-header>
+                                    </mat-expansion-panel-header> -->
 
-                                    <div [formGroupName]="i" *ngFor="let projectskill of projectskilllist;let i = index"
-                                        [attr.data-index]="i">
+                                <div [formGroupName]="i" *ngFor="let projectskill of projectskilllist;let i = index"
+                                    [attr.data-index]="i">
+                                    <div>
+                                        <div>
+                                            <mat-form-field class="col-xs-6">
+                                                <input matInput [(ngModel)]="projectskill.ausername"
+                                                    formControlName="username" placeholder="Nom d'utilisateur"
+                                                    style="color:red;" readonly>
+                                            </mat-form-field>
 
-                                        <mat-form-field class="col-md-12 col-xs-12">
-                                            <input matInput [(ngModel)]="projectskill.ausername"
-                                                formControlName="username" placeholder="Nom d'utilisateur" style="color:red;" readonly>
-                                        </mat-form-field >
+                                            <mat-form-field class="col-xs-6">
+                                                <input matInput [(ngModel)]="projectskill.bskillname"
+                                                    formControlName="skillname" placeholder="Nom de la compétence"
+                                                    style="color:green;" readonly>
+                                            </mat-form-field>
 
-                                        <mat-form-field class="col-md-12 col-xs-12">
-                                            <input matInput [(ngModel)]="projectskill.skillname"
-                                                formControlName="skillname" placeholder="Nom de la compétence" readonly>
-                                        </mat-form-field>
-
-                                        <mat-form-field class="col-md-12 col-xs-12">
-                                            <input matInput [(ngModel)]="projectskill.grade" formControlName="grade"
-                                                placeholder="Nôte de 1 à 20" required>
-                                            <mat-error
-                                                *ngIf="(projectskillForm.controls['projectskillList']).controls[i].get('grade').hasError('pattern')">
-                                                Entier entre 1 et 20 uniquement !
-                                            </mat-error>
-                                        </mat-form-field>
-
-                                        <mat-form-field class="col-md-12 col-xs-12">
-                                            <input matInput formControlName="newskill"
-                                                placeholder="Nouvelle compétence aquise ?">
-                                        </mat-form-field>
-
-                                        <mat-form-field class="col-md-12 col-xs-12">
-                                            <input matInput formControlName="level"
-                                                placeholder="Quelle est le niveau de la compétence aquise ?">
-                                        </mat-form-field>
-
-                                        <div class="button-row text-center" fxFlex="100">
-                                            <button class="add-back-btn text-right btn-submit" mat-raised-button color="black"
-                                                (click)="onSubmit()">Enregistrer</button>
+                                            <mat-form-field class="col-xs-6">
+                                                <input matInput [(ngModel)]="projectskill.grade" formControlName="grade"
+                                                    placeholder="Nôte de 1 à 20" required>
+                                                <mat-error
+                                                    *ngIf="(projectskillForm.controls['projectskillList']).controls[i].get('grade').hasError('pattern')">
+                                                    Entier entre 1 et 20 uniquement !
+                                                </mat-error>
+                                            </mat-form-field>
                                         </div>
+                                        <div>
 
+                                            <mat-form-field class="col-xs-6">
+                                                <input matInput formControlName="newskill"
+                                                    placeholder="Nouvelle compétence aquise ?">
+                                            </mat-form-field>
+
+                                            <mat-form-field class="col-xs-12">
+                                                <input matInput formControlName="level"
+                                                    placeholder="Quelle est le niveau de la compétence aquise ?">
+                                            </mat-form-field>
+                                        </div>
                                     </div>
-                                </mat-expansion-panel>
+
+
+                                </div>
+                                <!-- </mat-expansion-panel> -->
                             </mat-accordion>
+                            <div class="button-row text-center" fxFlex="100">
+                                <button class="add-back-btn text-right btn-submit" mat-raised-button color="black" (click)="onSubmit()">Validation</button>
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -116,19 +116,14 @@ export class ProfilComponent implements OnInit, OnDestroy {
             });
         this.dataService.getAll('agents')
             .subscribe((data: {}) => {
-                for (let i = 0; i < 9; i++) {
+                for (let i = 0; i < 99; i++) {
                     if (JSON.stringify(data).includes('\\"AGENT' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
-                        console.log(i.toString());
                         this.actualagentnumber = i.toString();
                         console.log(this.actualagentnumber + '------------');
                         this.dataService.get('agent', 'AGENT' + i.toString())
                             .subscribe(data2 => {
                                 this.respbc = data2;
                                 this.agent = JSON.parse(this.respbc.response);
-                                console.log(this.agent.coin);
-                                console.log(this.agent.entity);
-                                console.log(this.agent.entitypoint);
-                                console.log(this.agent.point);
                             });
                         return;
                     }
@@ -136,41 +131,38 @@ export class ProfilComponent implements OnInit, OnDestroy {
             });
         this.dataService.getAll('diplomas')
             .subscribe((data: {}) => {
-                for (let i = 0; i < 9; i++) {
+                for (let i = 0; i < 99; i++) {
                     if (JSON.stringify(data).includes('\\"DIPLOMA' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
                         this.dataService.get('diploma', 'DIPLOMA' + i.toString())
                             .subscribe(data2 => {
                                 this.respbc = data2;
+                                this.diploma = new Diploma();
                                 this.diploma = JSON.parse(this.respbc.response);
-                                this.diplomalist.push(this.diploma);
-                                console.log(this.diplomalist);
-                                this.diplomalist.forEach(
-                                    item => {
-                                        this.addDiplomasForm();
-                                    });
+                                if (this.diploma.diplomaname !== '') {
+                                    this.diplomalist.push(this.diploma);
+                                    this.addDiplomasForm();
+                                }
                             });
                     }
                 }
             });
         this.dataService.getAll('skills')
             .subscribe((data: {}) => {
-                for (let i = 0; i < 9; i++) {
+                for (let i = 0; i < 99; i++) {
                     if (JSON.stringify(data).includes('\\"SKILL' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
                         this.dataService.get('skill', 'SKILL' + i.toString())
                             .subscribe(data2 => {
                                 this.respbc = data2;
+                                this.skill = new Skill();
                                 this.skill = JSON.parse(this.respbc.response);
-                                this.skilllist.push(this.skill);
-                                console.log(this.skilllist);
-                                this.skilllist.forEach(
-                                    item => {
-                                        this.addSkillsForm();
-                                    });
+                                if (this.skill.skillname !== '') {
+                                    this.skilllist.push(this.skill);
+                                    this.addSkillsForm();
+                                }
                             });
                     }
                 }
             });
-
     }
 
     ngOnDestroy() {
@@ -234,7 +226,6 @@ export class ProfilComponent implements OnInit, OnDestroy {
             .pipe(first())
             .subscribe(
                 data => {
-                    this.router.navigate(['/about']);
                 },
                 error => {
                     this.alertService.error(error);
@@ -242,13 +233,13 @@ export class ProfilComponent implements OnInit, OnDestroy {
     }
 
     async onSubmit2() {
+        this.alertService.error('Enregistrement sur la BlockChain ...', false);
         for (let i = 0; i < 9; i++) {
             this.dataService.get('agent', 'AGENT' + i.toString())
                 .subscribe(data => {
                     for (let k = 0; k < 99; k++) {
                         if (JSON.stringify(data).includes('\\"entity\\":\\"' + this.f2.entity.value + '\\",\\"entitypoint\\":\\"' + k.toString() + '\\"')) {
                             this.f2.entitypoint.value = k.toString();
-                            console.log(this.f2.entitypoint.value);
                             this.agent = new Agent();
                             this.agent.agentid = 'AGENT' + this.actualagentnumber;
                             this.agent.username = this.currentUser.username;
@@ -256,7 +247,6 @@ export class ProfilComponent implements OnInit, OnDestroy {
                             this.agent.entity = this.f2.entity.value;
                             this.agent.entitypoint = this.f2.entitypoint.value;
                             this.agent.point = this.f2.point.value;
-                            console.log(this.agent);
                             this.dataService.add('addAgent', this.agent)
                                 .subscribe(res => {
                                     return;
@@ -273,7 +263,6 @@ export class ProfilComponent implements OnInit, OnDestroy {
                                 this.agent.entity = this.f2.entity.value;
                                 this.agent.entitypoint = '0';
                                 this.agent.point = this.f2.point.value;
-                                console.log(this.agent);
                                 this.dataService.add('addAgent', this.agent)
                                     .subscribe(res => {
                                         return;
@@ -283,21 +272,20 @@ export class ProfilComponent implements OnInit, OnDestroy {
                 });
         }
 
-        await this.dataService.getAll('diplomas')
+        this.dataService.getAll('diplomas')
             .subscribe((data4: {}) => {
-                for (let b = 0; b < 20; b++) {
-                    if (JSON.stringify(data4).includes('\\"Key\\":\\"DIPLOMA' + b.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
-                        this.dataService.delete('delete', 'DIPLOMA' + b.toString()).subscribe(res => {
+                for (let a = 0; a < 99; a++) {
+                    if (JSON.stringify(data4).includes('\\"Key\\":\\"DIPLOMA' + a.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
+                        this.dataService.delete('delete', 'DIPLOMA' + a.toString()).subscribe(res => {
                         });
                     }
                 }
             }
             );
 
-
-        await this.dataService.getAll('skills')
+        this.dataService.getAll('skills')
             .subscribe((data4: {}) => {
-                for (let b = 0; b < 20; b++) {
+                for (let b = 0; b < 99; b++) {
                     if (JSON.stringify(data4).includes('\\"Key\\":\\"SKILL' + b.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
                         this.dataService.delete('delete', 'SKILL' + b.toString()).subscribe(res => {
                         });
@@ -306,56 +294,64 @@ export class ProfilComponent implements OnInit, OnDestroy {
             }
             );
 
-        for (let b = 0; b < this.f3.diplomaList.value.length; b++) {
-            const diploma = new Diploma();
-            diploma.diplomaid = 'DIPLOMA' + b.toString();
-            diploma.diplomaname = this.f3.diplomaList.value[b].diplomaname;
+        await delay(5000);
+        console.log('wait');
+
+        let d = 0;
+        while (d < this.diplomalist.length) {
+            let diploma = new Diploma();
+            diploma.diplomaname = this.diplomalist[d].diplomaname;
             diploma.username = this.currentUser.username;
-            this.dataService.add('addDiploma', diploma).subscribe(res => {
-            });
+            this.dataService.getAll('diplomas')
+                .subscribe((data: {}) => {
+                    let i = 0;
+                    while (JSON.stringify(data).includes('\\"DIPLOMA' + i.toString())) {
+                        i++;
+                    }
+                    console.log('i' + i);
+                    diploma.diplomaid = 'DIPLOMA' + i.toString();
+                    this.dataService.add('addDiploma', diploma).subscribe(res => {
+                    });
+
+                });
+            await delay(5000);
+            console.log('test');
+            d++;
         }
 
-        for (let b = 0; b < this.f4.skillList.value.length; b++) {
-            const skill = new Skill();
-            skill.skillid = 'SKILL' + b.toString();
+        let e = 0;
+        while (e < this.skilllist.length) {
+            let skill = new Skill();
             skill.username = this.currentUser.username;
-            skill.skillname = this.f4.skillList.value[b].skillname;
-            skill.level = this.f4.skillList.value[b].level;
-            skill.grade = '';
-            this.dataService.add('addSkill', skill).subscribe(res => {
-            });
-        }
-    }
+            skill.skillname = this.skilllist[e].bskillname;
+            skill.level = this.skilllist[e].level;
+            if (this.skilllist[e].grade == null) {
+                skill.grade = '';
+            } else {
+                skill.grade = this.skilllist[e].grade;
+            }
 
-    // checkskills() {
-    //     this.dataService.getAll('skills')
-    //         .subscribe((data5: {}) => {
-    //             for (let l = 0; l < 20; l++) {
-    //                 this.dataService.get('skill', 'SKILL' + l.toString())
-    //                     .subscribe(data10 => {
-    //                         for (let b = 0; b < this.f2.skillset.value.length; b++) {
-    //                             if (JSON.stringify(data10).includes('\\"ausername\\":\\"' + this.currentUser.username + '\\"') && (JSON.stringify(data10).includes('\\"level\\":\\"' + this.f2.skillset.value[b].level + '\\",\\"skillname\\":\\"' + this.f2.skillset.value[b].skillname + '\\"'))) {
-    //                                 for (let i = 0; i < 20; i++) {
-    //                                     if (!JSON.stringify(data5).includes('SKILL' + i.toString())) {
-    //                                         this.str = i.toString();
-    //                                         this.skill = new Skill();
-    //                                         this.skill.skillid = 'SKILL' + i.toString();
-    //                                         this.skill.username = this.currentUser.username;
-    //                                         this.skill.skillname = this.f2.skillset.value[b].skillname;
-    //                                         this.skill.level = this.f2.skillset.value[b].level;
-    //                                         this.skill.grade = '0';
-    //                                         console.log(this.diploma);
-    //                                         this.dataService.add('addDiploma', this.diploma).subscribe(res => {
-    //                                         });
-    //                                         return;
-    //                                     }
-    //                                 }
-    //                             }
-    //                         }
-    //                     });
-    //             }
-    //         });
-    // }
+            this.dataService.getAll('skills')
+                .subscribe((data: {}) => {
+                    let j = 0;
+                    while (JSON.stringify(data).includes('\\"SKILL' + j.toString())) {
+                        j++;
+                    }
+                    console.log('j' + j);
+                    skill.skillid = 'SKILL' + j.toString();
+                    console.log(skill);
+                    this.dataService.add('addSkill', skill).subscribe(res => {
+                    });
+
+                });
+            await delay(5000);
+            console.log('test2');
+            e++;
+        }
+
+        await delay(1);
+        this.alertService.success('Enregistrement sur la BlockChain reussi !', false);
+    }
 
     openMenu() {
         $('body').removeClass('noScroll');
@@ -442,4 +438,8 @@ function confirmPassword(control: AbstractControl): any {
             passwordsNotMatch: true
         };
     }
+}
+
+function delay(timeInMillis: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(() => resolve(), timeInMillis));
 }

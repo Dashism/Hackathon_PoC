@@ -96,12 +96,14 @@ export class ProjetComponent implements OnInit, OnDestroy {
 
     addSkill() {
         this.addSkillForm();
+        this.skillok = '3';
     }
 
     deleteSkill(index: number) {
         // this.project.skillList.splice(index, 1);
         const control = <FormArray>this.form.controls['skillset'];
         control.removeAt(index);
+        this.skillok = '3';
     }
 
     onFormValuesChanged(): void {
@@ -136,7 +138,10 @@ export class ProjetComponent implements OnInit, OnDestroy {
         }
     }
 
-    onSubmit() {
+    async onSubmit() {
+
+        this.alertService.error('Enregistrement du project sur la BlockChain ...', false);
+
         this.dataService.getAll('projects')
             .subscribe((data: {}) => {
                 for (let i = 0; i < 13; i++) {
@@ -152,55 +157,86 @@ export class ProjetComponent implements OnInit, OnDestroy {
                         console.log(this.project);
                         this.dataService.add('addProject', this.project).subscribe(res => {
                         });
-                        this.alertService.error('Enregistrement du project BlockChain reussi !', false);
                         return;
                     }
                 }
             });
 
-        for (let i = 0; i < this.f.skillset.value.length; i++) {
-            for (let k = 0; k < 13; k++) {
-                this.dataService.get('skill', 'SKILL' + k.toString())
+        await delay(2000);
+
+        let goodskill: Skill[] = [];
+        let i = 0;
+        while (i < this.f.skillset.value.length) {
+            let l = 0;
+            console.log(goodskill.length);
+            console.log(i);
+            while (goodskill.length !== (i + 1)) {
+                this.dataService.get('skill', 'SKILL' + l.toString())
                     .subscribe(data2 => {
-                        if (JSON.stringify(data2).includes('\\"level\\":\\"' + this.f.skillset.value[i].level + '\\",\\"skillname\\":\\"' + this.f.skillset.value[i].skillname + '\\"')) {
+                        if (JSON.stringify(data2).includes('\\"bskillname\\":\\"' + this.f.skillset.value[i].skillname + '\\",\\"clevel\\":\\"' + this.f.skillset.value[i].level + '\\"')) {
                             this.respbc = data2;
+                            this.skill = new Skill();
                             this.skill = JSON.parse(this.respbc.response);
-                            this.participant = new Participant();
-                            this.participant.projectname = this.f.name.value;
-                            this.participant.username = this.skill.username;
-                            for (let l = 0; l < 13; l++) {
-                                this.dataService.getAll('participant')
-                                    .subscribe((data3: {}) => {
-                                        if (!JSON.stringify(data3).includes('PARTICIPANT' + l.toString())) {
-                                            if (!JSON.stringify(data3).includes('\\"ausername\\":\\"' + this.participant.username + '\\",\\"projectname\\":\\"' + this.participant.projectname + '\\"')) {
-                                                this.participant.participantid = 'PARTICIPANT' + l.toString();
-                                                this.dataService.add('addParticpant', this.participant).subscribe(res => {
-                                                    return;
-                                                });
-                                            }
-                                        }
-                                    });
-                            }
-                            this.pskill = new Projectskill();
-                            this.pskill.projectname = this.f.name.value;
-                            this.pskill.skillname = this.f.skillset.value[i].skillname;
-                            this.pskill.level = this.f.skillset.value[i].level;
-                            this.pskill.grade = '';
-                            for (let l = 0; l < 13; l++) {
-                                this.dataService.getAll('projectskills')
-                                    .subscribe((data3: {}) => {
-                                        if (!JSON.stringify(data3).includes('PROJECTSKILL' + l.toString())) {
-                                            this.pskill.projectskillid = 'PROJECTSKILL' + l.toString();
-                                            this.dataService.add('addProjectskill', this.pskill).subscribe(res => {
-                                                return;
-                                            });
-                                        }
-                                    });
-                            }
+                            goodskill.push(this.skill);
+                            return;
                         }
                     });
+                await delay(1000);
+                l++;
             }
+            await delay(1000);
+            i++;
         }
+
+
+        await delay(1000);
+        console.log(goodskill);
+
+        for (let i = 0; i < goodskill.length; i++) {
+            this.participant = new Participant();
+            this.participant.projectname = this.f.name.value;
+            this.participant.username = goodskill[i].ausername;
+            this.dataService.getAll('participants')
+                .subscribe((data3: {}) => {
+                    let j = 0;
+                    while (JSON.stringify(data3).includes('PARTICIPANT' + j.toString())) {
+                        j++;
+                    }
+                    this.participant.participantid = 'PARTICIPANT' + j.toString();
+                    console.log(this.participant);
+                    this.dataService.add('addParticipant', this.participant).subscribe(res => {
+                    });
+                });
+
+            this.pskill = new Projectskill();
+            this.pskill.projectname = this.f.name.value;
+            this.pskill.skillname = goodskill[i].bskillname;
+            this.pskill.username = goodskill[i].ausername;
+            this.pskill.level = goodskill[i].clevel;
+            if (goodskill[i].grade == null) {
+                this.pskill.grade = '';
+            } else {
+                this.pskill.grade = goodskill[i].grade;
+            }
+
+            this.dataService.getAll('projectskills')
+                .subscribe((data4: {}) => {
+                    let g = 0;
+                    while (JSON.stringify(data4).includes('PROJECTSKILL' + g.toString())) {
+                        g++;
+                    }
+                    this.pskill.projectskillid = 'PROJECTSKILL' + g.toString();
+                    console.log(this.pskill);
+                    this.dataService.add('addProjectskill', this.pskill).subscribe(res => {
+                    });
+                });
+            await delay(4000);
+            i++;
+        }
+
+        await delay(1);
+
+        this.alertService.success('Enregistrement du project sur la BlockChain reussi !', false);
         this.skillok = '3';
     }
 
@@ -208,26 +244,37 @@ export class ProjetComponent implements OnInit, OnDestroy {
         this.authenticationService.logout();
     }
 
-    checkifskillspresent() {
+    async checkifskillspresent() {
         let skillstring: String[] = [];
         for (let i = 0; i < this.f.skillset.value.length; i++) {
-            this.dataService.getAll('skills')
-                .subscribe((data: {}) => {
-                    if (JSON.stringify(data).includes('\\"level\\":\\"' + this.f.skillset.value[i].level + '\\",\\"skillname\\":\\"' + this.f.skillset.value[i].skillname + '\\"')) {
-                        skillstring.push('1');
-                    } else {
-                        skillstring.push('2');
-                    }
-                    if (skillstring.includes('2')) {
-                        this.skillok = '2';
-                    } else {
-                        this.skillok = '1';
-                    }
-                });
+            for (let i = 0; i < this.f.skillset.value.length; i++) {
+                this.dataService.getAll('skills')
+                    .subscribe((data: {}) => {
+                        if (JSON.stringify(data).includes('\\"bskillname\\":\\"' + this.f.skillset.value[i].skillname + '\\",\\"clevel\\":\\"' + this.f.skillset.value[i].level + '\\"')) {
+                            skillstring.push('1');
+                        } else {
+                            skillstring.push('2');
+                        }
+                    });
+            }
+        }
+
+        await delay(1000);
+
+        if (skillstring.includes('2')) {
+            this.skillok = '2';
+            console.log('test3');
+        } else {
+            this.skillok = '1';
+            console.log('test4');
         }
     }
 
     reset3() {
         this.skillok = '3';
     }
+}
+
+function delay(timeInMillis: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(() => resolve(), timeInMillis));
 }

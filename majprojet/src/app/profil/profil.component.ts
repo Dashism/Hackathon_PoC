@@ -24,6 +24,9 @@ import { Skill } from '../_models/skill';
     styleUrls: ['./profil.component.scss']
 })
 export class ProfilComponent implements OnInit, OnDestroy {
+    today: Date;
+    todaystart: Date;
+    todayend: Date;
     skill: Skill;
     skilllist: Skill[] = [];
     actualagentnumber: string;
@@ -69,7 +72,9 @@ export class ProfilComponent implements OnInit, OnDestroy {
             coin: {},
             point: {},
             entity: {},
-            entitypoint: {}
+            entitypoint: {},
+            startdate: {},
+            enddate: {}
         };
         this._unsubscribeAll = new Subject();
         this.diplomaForm = this.formBuilder.group({
@@ -84,6 +89,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.today = new Date();
         this.agent = new Agent();
         this.agent.coin = '0';
         this.agent.point = '0';
@@ -107,7 +113,9 @@ export class ProfilComponent implements OnInit, OnDestroy {
             'coin': '',
             'point': '',
             'entity': ['', Validators.required],
-            'entitypoint': ''
+            'entitypoint': '',
+            'startdate': ['', Validators.required],
+            'enddate': ['', Validators.required]
         });
         this.form2.valueChanges
             .pipe(takeUntil(this._unsubscribeAll))
@@ -124,6 +132,8 @@ export class ProfilComponent implements OnInit, OnDestroy {
                             .subscribe(data2 => {
                                 this.respbc = data2;
                                 this.agent = JSON.parse(this.respbc.response);
+                                this.todaystart = new Date(this.agent.startdate);
+                                this.todayend =  new Date(this.agent.enddate);
                             });
                         return;
                     }
@@ -233,7 +243,9 @@ export class ProfilComponent implements OnInit, OnDestroy {
     }
 
     async onSubmit2() {
-        this.alertService.error('Enregistrement sur la BlockChain ...', false);
+
+        this.alertService.error('Enregistrement de vos données sur la BlockChain ...', false);
+
         for (let i = 0; i < 9; i++) {
             this.dataService.get('agent', 'AGENT' + i.toString())
                 .subscribe(data => {
@@ -247,6 +259,8 @@ export class ProfilComponent implements OnInit, OnDestroy {
                             this.agent.entity = this.f2.entity.value;
                             this.agent.entitypoint = this.f2.entitypoint.value;
                             this.agent.point = this.f2.point.value;
+                            this.agent.startdate = this.f2.startdate.value;
+                            this.agent.enddate = this.f2.enddate.value;
                             this.dataService.add('addAgent', this.agent)
                                 .subscribe(res => {
                                     return;
@@ -263,6 +277,8 @@ export class ProfilComponent implements OnInit, OnDestroy {
                                 this.agent.entity = this.f2.entity.value;
                                 this.agent.entitypoint = '0';
                                 this.agent.point = this.f2.point.value;
+                                this.agent.startdate = this.f2.startdate.value;
+                                this.agent.enddate = this.f2.enddate.value;
                                 this.dataService.add('addAgent', this.agent)
                                     .subscribe(res => {
                                         return;
@@ -295,7 +311,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
             );
 
         await delay(5000);
-        console.log('wait');
+        this.alertService.error('Enregistrement de vos diplômes sur la BlockChain ...', false);
 
         let d = 0;
         while (d < this.diplomalist.length) {
@@ -319,12 +335,14 @@ export class ProfilComponent implements OnInit, OnDestroy {
             d++;
         }
 
+        this.alertService.error('Enregistrement de vos compétences sur la BlockChain ...', false);
+
         let e = 0;
         while (e < this.skilllist.length) {
             let skill = new Skill();
             skill.username = this.currentUser.username;
             skill.skillname = this.skilllist[e].bskillname;
-            skill.level = this.skilllist[e].level;
+            skill.level = this.skilllist[e].clevel;
             if (this.skilllist[e].grade == null) {
                 skill.grade = '';
             } else {

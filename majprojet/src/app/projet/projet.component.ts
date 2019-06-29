@@ -163,6 +163,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
             });
 
         await delay(2000);
+        this.alertService.error('Enregistrement des compétences sur la BlockChain ...', false);
 
         let goodskill: Skill[] = [];
         let i = 0;
@@ -190,7 +191,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
 
 
         await delay(1000);
-        console.log(goodskill);
+        this.alertService.error('Enregistrement des participants sur la BlockChain ...', false);
 
         for (let i = 0; i < goodskill.length; i++) {
             this.participant = new Participant();
@@ -213,11 +214,6 @@ export class ProjetComponent implements OnInit, OnDestroy {
             this.pskill.skillname = goodskill[i].bskillname;
             this.pskill.username = goodskill[i].ausername;
             this.pskill.level = goodskill[i].clevel;
-            if (goodskill[i].grade == null) {
-                this.pskill.grade = '';
-            } else {
-                this.pskill.grade = goodskill[i].grade;
-            }
 
             this.dataService.getAll('projectskills')
                 .subscribe((data4: {}) => {

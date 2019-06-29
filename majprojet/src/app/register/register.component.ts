@@ -190,6 +190,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
                             this.agent.entity = '';
                             this.agent.entitypoint = '0';
                             this.agent.point = '0';
+                            this.agent.startdate = '';
+                            this.agent.enddate = '';
                             console.log(this.agent);
                             this.dataService.add('addAgent', this.agent).subscribe(res => {
                             });

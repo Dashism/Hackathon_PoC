@@ -41,7 +41,6 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
     usersmodif: User[] = [];
     usersmodif2: User[] = [];
     userscreator: User[] = [];
-    router: Router;
     form: FormGroup;
     formErrors: any;
     currentUser: User;
@@ -55,6 +54,7 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
     constructor(
         public formBuilder: FormBuilder,
         private alertService: AlertService,
+        private router: Router,
         private userService: UserService,
         private authenticationService: AuthenticationService,
         private _formBuilder: FormBuilder,
@@ -128,13 +128,14 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
     }
 
     async onSubmit() {
-        this.alertService.error('Enregistrement sur la BlockChain ...', false);
+        this.alertService.error('Mise à jour de projet sur la BlockChain ...', false);
 
         // Projet finish
         for (let l = 0; l < this.projectlist.length; l++) {
             for (let i = 0; i < 99; i++) {
                 this.dataService.get('project', 'PROJECT' + i.toString())
                     .subscribe(data => {
+                        console.log(this.projectlist[i].projectname);
                         if (JSON.stringify(data).includes('\\"ausername\\":\\"' + this.currentUser.username + '\\"') && JSON.stringify(data).includes('\\"finish\\":\\"0\\",\\"projectname\\":\\"' + this.projectlist[i].projectname + '\\"')) {
                             this.respbc = data;
                             this.project = new Project();
@@ -151,6 +152,7 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
         }
 
         await delay(3000);
+        this.alertService.error('Mise à jour argent virtuel du créateur sur la BlockChain ...', false);
 
         // point agent createur
         this.dataService.getAll('agents')
@@ -174,6 +176,7 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
             });
 
         await delay(3000);
+        this.alertService.error('Mise à jour argent virtuel des participants sur la BlockChain ...', false);
 
         // point participants
         for (let l = 0; l < this.f.projectskillList.value.length; l++) {
@@ -200,6 +203,7 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
         }
 
         await delay(3000);
+        this.alertService.error('Mise à jour des points entité sur la BlockChain ...', false);
 
         //entity number
         for (let l = 0; l < this.f.projectskillList.value.length; l++) {
@@ -220,7 +224,7 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
         }
 
         await delay(3000);
-        console.log(this.entitylist);
+        this.alertService.error('Mise à jour des points entité sur la BlockChain ...', false);
 
         // entity point
         for (let l = 0; l < this.entitylist.length; l++) {
@@ -243,6 +247,7 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
         }
 
         await delay(3000);
+        this.alertService.error('Mise à jour des nôtes des participants sur la BlockChain ...', false);
 
         // grade
         let l = 0;
@@ -273,6 +278,7 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
         }
 
         await delay(3000);
+        this.alertService.error('Création des nouvelles compétences sur la BlockChain ...', false);
 
         //new competence
         let m = 0;
@@ -299,14 +305,14 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
             m++;
         }
 
-        await delay(1);
+        await delay(1000);
         this.alertService.success('Enregistrement de la notation sur la BlockChain reussi !', false);
 
         await delay(1000);
         this.alertService.success('Merci de votre participation !', false);
 
-        // await delay(1000);
-        // this.router.navigate(['/profil']);
+        await delay(1000);
+        this.router.navigate(['/profil']);
 
     }
 

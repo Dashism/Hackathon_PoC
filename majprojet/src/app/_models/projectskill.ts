@@ -12,5 +12,4 @@ export class Projectskill {
     public projectname: string;
     public skillname: string;
     public level: string;
-    public grade: string;
 }

@@ -74,8 +74,8 @@
                             <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
                                 <mat-form-field class="col-md-6 col-xs-10">
                                     <input matInput [matDatepicker]="startdate" [min]="today"
-                                        placeholder="Date de début" formControlName="startdate" required>
-                                    <mat-error *ngIf="form.get('startdate').hasError('required')">
+                                        placeholder="Date de début" formControlName="startdate" required readonly>
+                                    <mat-error *ngIf="formErrors.startdate.required">
                                         La date de début est obligatoire !
                                     </mat-error>
                                     <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
@@ -84,8 +84,8 @@
                             </div>
                             <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
                                 <mat-form-field class="col-md-6 col-xs-10">
-                                    <input matInput placeholder="Date de fin" formControlName="enddate"
-                                        [matDatepicker]="enddate" [min]="form.controls.startdate.value" required>
+                                    <input matInput [matDatepicker]="enddate" [min]="form.controls.startdate.value"
+                                        placeholder="Date de fin" formControlName="enddate" required readonly>
                                     <mat-error *ngIf="formErrors.enddate.required">
                                         La date de fin est obligatoire !
                                     </mat-error>

@@ -145,6 +145,13 @@
                                 </div>
                                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
                                     <mat-form-field class="col-md-12 col-xs-12">
+                                        <input matInput [(ngModel)]="agent.entitypoint"
+                                            placeholder="Nombre de points de votre entité" formControlName="entitypoint"
+                                            style="color:red;" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
+                                    <mat-form-field class="col-md-12 col-xs-12">
                                         <input matInput [(ngModel)]="agent.entity" placeholder="Numero de votre entité"
                                             formControlName="entity" required>
                                         <mat-error *ngIf="formErrors2.entity.required">
@@ -152,11 +159,28 @@
                                         </mat-error>
                                     </mat-form-field>
                                 </div>
-                                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
+                                <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
                                     <mat-form-field class="col-md-12 col-xs-12">
-                                        <input matInput [(ngModel)]="agent.entitypoint"
-                                            placeholder="Nombre de points de votre entité" formControlName="entitypoint"
-                                            style="color:red;" readonly>
+                                        <input matInput [(ngModel)]="todaystart" [matDatepicker]="startdate"
+                                            [min]="today" placeholder="Début disponibilité" formControlName="startdate"
+                                            required readonly>
+                                        <mat-error *ngIf="formErrors2.startdate.required">
+                                            Votre disponibilité est obligatoire !
+                                        </mat-error>
+                                        <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
+                                        <mat-datepicker #startdate></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div fxLayout="row" fxLayoutAlign="center" fxFlex="100 0 auto">
+                                    <mat-form-field class="col-md-12 col-xs-12">
+                                        <input matInput [(ngModel)]="todayend" [matDatepicker]="enddate"
+                                            [min]="form2.controls.startdate.value" placeholder="Fin disponibilité"
+                                            formControlName="enddate" required readonly>
+                                        <mat-error *ngIf="formErrors2.enddate.required">
+                                            Votre disponibilité est obligatoire !
+                                        </mat-error>
+                                        <mat-datepicker-toggle matSuffix [for]="enddate"></mat-datepicker-toggle>
+                                        <mat-datepicker #enddate></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                             </form>
@@ -197,7 +221,7 @@
 
                             <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
                                 <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto"
-                                name="skillForm" [formGroup]="skillForm">
+                                    name="skillForm" [formGroup]="skillForm">
                                     <mat-accordion formArrayName="skillList" class="col-md-12 col-xs-12">
                                         <mat-expansion-panel>
                                             <mat-expansion-panel-header>
@@ -216,7 +240,7 @@
 
 
                                                 <mat-form-field>
-                                                    <input matInput [(ngModel)]="skill.level" formControlName="level"
+                                                    <input matInput [(ngModel)]="skill.clevel" formControlName="level"
                                                         placeholder="Niveau de 1 à 5" required>
                                                     <mat-error
                                                         *ngIf="(skillForm.controls['skillList']).controls[i].get('level').hasError('pattern')">

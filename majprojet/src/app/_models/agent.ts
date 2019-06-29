@@ -15,4 +15,6 @@ export class Agent {
     public entity: string;
     public entitypoint: string;
     public point: string;
+    public startdate: string;
+    public enddate: string;
 }

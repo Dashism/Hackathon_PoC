@@ -54,7 +54,8 @@
                     <div class="col-xl-6 col-md-6">
                         <form class="inq-form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
                             [formGroup]="form">
-
+                            <img [src]="picture" alt="Avatar" class="avatar">
+                            <br>
                             <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">
                                 <mat-form-field class="col-md-12 col-xs-12">
                                     <input matInput placeholder="Nom" formControlName="name" required>

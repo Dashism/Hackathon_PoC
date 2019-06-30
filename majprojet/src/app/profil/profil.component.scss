@@ -463,3 +463,11 @@ input[type=submit]:focus {
   overflow-y: scroll;
   max-height: 500px
 }*/
+
+.avatar {
+  margin: auto;
+  // vertical-align: middle;
+  width: 111px;
+  height: 111px;
+  border-radius: 100%;
+}

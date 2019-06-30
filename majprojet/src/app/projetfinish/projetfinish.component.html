@@ -46,7 +46,7 @@
                     <div class="col-xl-12 col-md-12">
                         <div *ngFor="let project of projectlist;let i = index" [attr.data-index]="i">
                             <h2 style="color:blue;">{{project.projectname}}</h2>
-                            <h3>{{project.description}}</h3>
+                            <h3 style="text-align:justify;">{{project.description}}</h3>
                         </div>
                     </div>
                     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100 0 auto">

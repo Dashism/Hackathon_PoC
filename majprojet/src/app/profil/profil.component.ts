@@ -24,6 +24,7 @@ import { Skill } from '../_models/skill';
     styleUrls: ['./profil.component.scss']
 })
 export class ProfilComponent implements OnInit, OnDestroy {
+    picture: String;
     today: Date;
     todaystart: Date;
     todayend: Date;
@@ -89,6 +90,17 @@ export class ProfilComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        if (this.currentUser.username === 'Pierre') {
+            this.picture = 'assets/images/pierre.jpg';
+        } else if (this.currentUser.username === 'Mathilde') {
+            this.picture = 'assets/images/mathilde.jpg';
+        } else if (this.currentUser.username === 'Thomas') {
+            this.picture = 'assets/images/thomas.jpg';
+        } else {
+            this.picture = 'assets/images/random.jpg';
+        }
+
+
         this.today = new Date();
         this.agent = new Agent();
         this.agent.coin = '0';
@@ -133,7 +145,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
                                 this.respbc = data2;
                                 this.agent = JSON.parse(this.respbc.response);
                                 this.todaystart = new Date(this.agent.startdate);
-                                this.todayend =  new Date(this.agent.enddate);
+                                this.todayend = new Date(this.agent.enddate);
                             });
                         return;
                     }

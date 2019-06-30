@@ -13,6 +13,7 @@ import { AlertService, UserService, AuthenticationService } from '../_services';
 import { User } from '../_models';
 import { DataService } from '../data.service';
 import { Skill } from '../_models/skill';
+import { Agent } from '../_models/agent';
 import { Project } from '../_models/project';
 import { Projectskill } from '../_models/projectskill';
 import { Responsebc } from '../_models/responsebc';
@@ -24,6 +25,10 @@ import { Participant } from '../_models/participant';
     styleUrls: ['./projet.component.scss']
 })
 export class ProjetComponent implements OnInit, OnDestroy {
+    skilldisponibility: Skill[] = [];
+    dispostart: Date;
+    dispoend: Date;
+    agent: Agent;
     participant: Participant;
     skillok: string;
     skill: Skill;
@@ -162,41 +167,42 @@ export class ProjetComponent implements OnInit, OnDestroy {
                 }
             });
 
-        await delay(2000);
-        this.alertService.error('Enregistrement des compétences sur la BlockChain ...', false);
+        // await delay(2000);
+        // this.alertService.error('Enregistrement des compétences sur la BlockChain ...', false);
 
-        let goodskill: Skill[] = [];
-        let i = 0;
-        while (i < this.f.skillset.value.length) {
-            let l = 0;
-            console.log(goodskill.length);
-            console.log(i);
-            while (goodskill.length !== (i + 1)) {
-                this.dataService.get('skill', 'SKILL' + l.toString())
-                    .subscribe(data2 => {
-                        if (JSON.stringify(data2).includes('\\"bskillname\\":\\"' + this.f.skillset.value[i].skillname + '\\",\\"clevel\\":\\"' + this.f.skillset.value[i].level + '\\"')) {
-                            this.respbc = data2;
-                            this.skill = new Skill();
-                            this.skill = JSON.parse(this.respbc.response);
-                            goodskill.push(this.skill);
-                            return;
-                        }
-                    });
-                await delay(1000);
-                l++;
-            }
-            await delay(1000);
-            i++;
-        }
+        // let goodskill: Skill[] = [];
+        // let i = 0;
+        // while (i < this.f.skillset.value.length) {
+        //     let l = 0;
+        //     console.log(goodskill.length);
+        //     console.log(i);
+        //     while (goodskill.length !== (i + 1)) {
+        //         this.dataService.get('skill', 'SKILL' + l.toString())
+        //             .subscribe(data2 => {
+        //                 if (JSON.stringify(data2).includes('\\"bskillname\\":\\"' + this.f.skillset.value[i].skillname + '\\",\\"clevel\\":\\"' + this.f.skillset.value[i].level + '\\"')) {
+        //                     this.respbc = data2;
+        //                     this.skill = new Skill();
+        //                     this.skill = JSON.parse(this.respbc.response);
+        //                     goodskill.push(this.skill);
+        //                     return;
+        //                 }
+        //             });
+        //         await delay(1000);
+        //         l++;
+        //     }
+        //     await delay(1000);
+        //     i++;
+        // }
 
 
         await delay(1000);
         this.alertService.error('Enregistrement des participants sur la BlockChain ...', false);
 
-        for (let i = 0; i < goodskill.length; i++) {
+        let i = 0;
+        while (i < this.skilldisponibility.length) {
             this.participant = new Participant();
             this.participant.projectname = this.f.name.value;
-            this.participant.username = goodskill[i].ausername;
+            this.participant.username = this.skilldisponibility[i].ausername;
             this.dataService.getAll('participants')
                 .subscribe((data3: {}) => {
                     let j = 0;
@@ -211,9 +217,9 @@ export class ProjetComponent implements OnInit, OnDestroy {
 
             this.pskill = new Projectskill();
             this.pskill.projectname = this.f.name.value;
-            this.pskill.skillname = goodskill[i].bskillname;
-            this.pskill.username = goodskill[i].ausername;
-            this.pskill.level = goodskill[i].clevel;
+            this.pskill.skillname = this.skilldisponibility[i].bskillname;
+            this.pskill.username = this.skilldisponibility[i].ausername;
+            this.pskill.level = this.skilldisponibility[i].clevel;
 
             this.dataService.getAll('projectskills')
                 .subscribe((data4: {}) => {
@@ -226,7 +232,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
                     this.dataService.add('addProjectskill', this.pskill).subscribe(res => {
                     });
                 });
-            await delay(4000);
+            await delay(6000);
             i++;
         }
 
@@ -241,28 +247,79 @@ export class ProjetComponent implements OnInit, OnDestroy {
     }
 
     async checkifskillspresent() {
-        let skillstring: String[] = [];
-        for (let i = 0; i < this.f.skillset.value.length; i++) {
-            for (let i = 0; i < this.f.skillset.value.length; i++) {
-                this.dataService.getAll('skills')
-                    .subscribe((data: {}) => {
-                        if (JSON.stringify(data).includes('\\"bskillname\\":\\"' + this.f.skillset.value[i].skillname + '\\",\\"clevel\\":\\"' + this.f.skillset.value[i].level + '\\"')) {
-                            skillstring.push('1');
-                        } else {
-                            skillstring.push('2');
+        this.alertService.error('Recherche de participant sur la BlockChain ...', false);
+        // let skillstring: String[] = [];
+        // for (let i = 0; i < this.f.skillset.value.length; i++) {
+        //         this.dataService.getAll('skills')
+        //             .subscribe((data: {}) => {
+        //                 if (JSON.stringify(data).includes('\\"bskillname\\":\\"' + this.f.skillset.value[i].skillname + '\\",\\"clevel\\":\\"' + this.f.skillset.value[i].level + '\\"')) {
+        //                     skillstring.push('1');
+        //                 } else {
+        //                     skillstring.push('2');
+        //                 }
+        //             });
+        // }
+
+        // await delay(1000);
+
+        // if (skillstring.includes('2')) {
+        //     this.skillok = '2';
+        //     console.log('test3');
+        // } else {
+        //     this.skillok = '1';
+        //     console.log('test4');
+        // }
+        this.skilldisponibility = [];
+        let l = 0;
+        while (l < this.f.skillset.value.length) {
+            for (let i = 0; i < 99; i++) {
+                this.dataService.get('skill', 'SKILL' + i.toString())
+                    .subscribe(data2 => {
+                        if (JSON.stringify(data2).includes('\\"bskillname\\":\\"' + this.f.skillset.value[l].skillname + '\\",\\"clevel\\":\\"' + this.f.skillset.value[l].level + '\\"')) {
+                            this.respbc = data2;
+                            this.skill = new Skill();
+                            this.skill = JSON.parse(this.respbc.response);
+                            this.skill.username = this.skill.ausername;
+                            for (let z = 0; z < 99; z++) {
+                                this.dataService.get('agent', 'AGENT' + z.toString())
+                                    .subscribe(data3 => {
+                                        if (JSON.stringify(data3).includes(this.skill.username)) {
+                                            this.respbc = data3;
+                                            this.agent = new Agent();
+                                            this.agent = JSON.parse(this.respbc.response);
+                                            this.dispostart = new Date(this.agent.startdate);
+                                            this.dispoend = new Date(this.agent.enddate);
+                                            let startdate = new Date(this.f.startdate.value);
+                                            let enddate = new Date(this.f.enddate.value);
+                                            console.log('dispostart' + this.dispostart);
+                                            console.log('dispoend' + this.dispoend);
+                                            console.log('startdate' + startdate);
+                                            console.log('enddate' + enddate);
+                                            if (this.dispostart <= startdate && this.dispoend >= enddate) {
+                                                this.skilldisponibility.push(this.skill);
+                                            }
+                                        }
+                                    });
+                            }
                         }
                     });
             }
+            this.skilldisponibility = this.skilldisponibility.filter((el, i, a) => i === a.indexOf(el));
+            await delay(8000);
+            this.alertService.error('Nous avons trouvé : ' + this.skilldisponibility.length + ' participants sur la BlockChain', false);
+            l++;
         }
 
-        await delay(1000);
+        await delay(8000);
 
-        if (skillstring.includes('2')) {
-            this.skillok = '2';
-            console.log('test3');
-        } else {
+        console.log(this.skilldisponibility);
+
+        if (this.skilldisponibility.length >= this.f.skillset.value.length) {
             this.skillok = '1';
-            console.log('test4');
+            this.alertService.success('Nous avons trouvé : ' + this.skilldisponibility.length + ' participants sur la BlockChain !', false);
+        } else {
+            this.skillok = '2';
+            this.alertService.error('Seulement : ' + this.skilldisponibility.length + ' participants trouvés sur la BlockChain ...', false);
         }
     }
 

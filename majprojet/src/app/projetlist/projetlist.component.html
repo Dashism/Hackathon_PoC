@@ -52,13 +52,12 @@
                         </div>
                         <div *ngFor="let project of projectlist;let i = index" [attr.data-index]="i">
                             <h2 style="color:blue;">{{project.projectname}}</h2>
-                            <h3>{{project.description}}</h3>
+                            <h3 style="text-align:justify;">{{project.description}}</h3>
                             <h4 style="color:green;">{{project.startdate}}</h4>
                             <h4 style="color:red;">{{project.enddate}}</h4>
-                            <br>
                             <div *ngFor="let participant of participantlist;let k = index" [attr.data-index]="k">
-                                <h2 *ngIf="participant.projectname === project.projectname" style="color:skyblue;">
-                                    Participant : {{participant.ausername}}</h2>
+                                <h3 *ngIf="participant.projectname === project.projectname" style="color:skyblue;">
+                                    Participant : {{participant.ausername}}</h3>
                                 <div *ngFor="let u of users;let l = index" [attr.data-index]="l">
                                     <h4 *ngIf="participant.projectname === project.projectname && participant.ausername === u.username"
                                         style="color:orangered">Nom : {{u.name}}
@@ -69,7 +68,6 @@
                                         style="color:orangered">Email : {{u.email}}</h4>
                                     <h4 *ngIf="participant.projectname === project.projectname && participant.ausername === u.username"
                                         style="color:orangered">Téléphone : {{u.mobile}}</h4>
-                                    <br>
                                 </div>
                             </div>
                         </div>
@@ -90,11 +88,10 @@
                         </div>
                         <div *ngFor="let project of projectuserparticipate;let i = index" [attr.data-index]="i">
                             <h2 style="color:blue;">{{project.projectname}}</h2>
-                            <h3>{{project.description}}</h3>
+                            <h3 style="text-align:justify;">{{project.description}}</h3>
                             <h4 style="color:green;">{{project.startdate}}</h4>
                             <h4 style="color:red;">{{project.enddate}}</h4>
-                            <br>
-                            <h2 style="color:violet;">Créateur : {{project.ausername}}</h2>
+                            <h3 style="color:violet;">Créateur : {{project.ausername}}</h3>
                             <div *ngFor="let u of userscreator;let l = index" [attr.data-index]="l">
                                 <h4 *ngIf="project.ausername === u.username" style="color:orangered">Nom : {{u.name}}
                                 </h4>

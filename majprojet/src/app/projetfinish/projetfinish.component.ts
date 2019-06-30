@@ -324,9 +324,9 @@ export class ProjetfinishComponent implements OnInit, OnDestroy {
         return this.formBuilder.group({
             'username': [''],
             'skillname': [''],
-            'grade': ['', Validators.pattern('[1-20]')],
+            'grade': ['', Validators.pattern('[0-2][0-9]')],
             'newskill': [''],
-            'level': ['']
+            'level': ['', Validators.pattern('[1-5]')]
         });
     }
 

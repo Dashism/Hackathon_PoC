@@ -23,60 +23,60 @@ export class FaqComponent implements OnInit, OnDestroy {
     currentUserSubscription: Subscription;
     faqsFiltered = [
         {
-            'question': 'Proident tempor est nulla irure ad est?',
-            'answer': 'Id nulla nulla proident deserunt deserunt proident in quis. Cillum reprehenderit labore id anim laborum'
+            'question': 'Comment puis-je utiliser le marché des compétences ?',
+            'answer': 'Pour commencer il faut vous enregistrer.'
         },
         {
-            'question': 'Ullamco duis commodo sint ad aliqua aute?',
-            'answer': 'Sunt laborum enim nostrud ea fugiat cillum mollit aliqua exercitation ad elit.'
+            'question': 'Comment enregistrer mon profil ?',
+            'answer': 'Allez dans le menu ENREGISTRER et rentrez toutes vos informations. A la fin cliquez sur Soumettre.'
         },
         {
-            'question': 'Eiusmod non occaecat pariatur Lorem in ex?',
-            'answer': 'Nostrud anim mollit incididunt qui qui sit commodo duis. Anim amet irure aliquip duis nostrud sit quis fugiat ullamco non dolor labore. Lorem sunt voluptate laboris culpa proident. Aute eiusmod aliqua exercitation irure exercitation qui laboris mollit occaecat eu occaecat fugiat.'
+            'question': 'Comment rentrer dans mon profil',
+            'answer': 'Allez dans le menu SE CONNECTER puis rentrez votre nom utilisateur et votre mot de passe puis cliquez sur Soumettre.'
         },
         {
-            'question': 'Lorem magna cillum consequat consequat mollit?',
-            'answer': 'Velit ipsum proident ea incididunt et. Consectetur eiusmod laborum voluptate duis occaecat ullamco sint enim proident.'
+            'question': 'Comment modifier mes informations personnelles ?',
+            'answer': 'Dans la section profil, modifiez vos informations situées sur la partie gauche, puis cliquez sur Enregistrer.'
         },
         {
-            'question': 'Quis irure cupidatat ad consequat reprehenderit excepteur?',
-            'answer': 'Esse nisi mollit aliquip mollit aute consequat adipisicing. Do excepteur dolore proident cupidatat pariatur irure consequat incididunt.'
+            'question': 'Comment modifier mes informations Blockchain ?',
+            'answer': 'Dans la section profil, modifiez vos informations situées sur la partie droite, puis cliquez sur Enregistrer.'
         },
         {
-            'question': 'Officia voluptate tempor ut mollit ea cillum?',
-            'answer': 'Deserunt veniam reprehenderit do elit magna ut.'
+            'question': 'Comment savoir si les informations sont bien enregistrées ?',
+            'answer': 'Un message rouge est situé en haut de la page sous le titre pour indiquer si tout se passe correctement.'
         },
         {
-            'question': 'Sunt fugiat officia nisi minim sunt duis?',
-            'answer': 'Eiusmod eiusmod sint aliquip exercitation cillum. Magna nulla officia ex consectetur ea ad excepteur in qui.'
+            'question': 'Comment créer un projet ?',
+            'answer': 'Dans la section projet, remplissez les informations, puis cliquez sur le bouton validation.'
         },
         {
-            'question': 'Non cupidatat enim quis aliquip minim laborum?',
-            'answer': 'Qui cillum eiusmod nostrud sunt dolore velit nostrud labore voluptate ad dolore. Eu Lorem anim pariatur aliqua. Ullamco ut dolor velit esse occaecat dolore eu cillum commodo qui. Nulla dolor consequat voluptate magna ut commodo magna consectetur non aute proident.'
+            'question': 'Comment soumettre un projet ?',
+            'answer': 'Après avoir cliqué sur validation, la blockchain vérifie si toutes les conditions au déroulement de votre projet sont présentes.'
         },
         {
-            'question': 'Dolor ex occaecat magna labore laboris qui?',
-            'answer': 'Incididunt qui excepteur eiusmod elit cillum occaecat voluptate cillum nostrud. Dolor ullamco ullamco eiusmod do sunt adipisicing pariatur. In esse esse labore id reprehenderit sint do. Pariatur culpa dolor tempor qui excepteur duis do anim minim ipsum.'
+            'question': 'Comment soumettre un projet après vérification de la Blockchain ?',
+            'answer': 'Si le bouton passe au bleu, il faut recliquer sur le bouton pour soumettre le projet, si le bouton est rouge recliquer pour recommencer une tentative de recherche.'
         },
         {
-            'question': 'Nisi et ullamco minim ea proident tempor?',
-            'answer': 'Dolor veniam dolor cillum Lorem magna nisi in occaecat nulla dolor ea eiusmod.'
+            'question': 'Comment puis-je savoir si mon projet a bien été enregistré ?',
+            'answer': 'Si le message en dessous du titre passe au vert tout est validé.'
         },
         {
-            'question': 'Amet sunt et quis amet commodo quis?',
-            'answer': 'Nulla dolore consequat aliqua sint consequat elit qui occaecat et.'
+            'question': 'Comment puis-je suivre mes projets ?',
+            'answer': 'Que vous soyez créateur ou participant, il vous suffit de cliquer sur la section SUIVI.'
         },
         {
-            'question': 'Ut eiusmod ex ea eiusmod culpa incididunt?',
-            'answer': 'Fugiat non incididunt officia ex incididunt occaecat. Voluptate nostrud culpa aliquip mollit incididunt non dolore.'
+            'question': ' Comment obtenir les contacts des différents participants ?',
+            'answer': 'Que vous soyez créateur ou participant, dans la section SUIVI cliquez sur le bouton au dessous de Projets créés ou Projets participés.'
         },
         {
-            'question': 'Proident reprehenderit laboris pariatur ut et nisi?',
-            'answer': 'Reprehenderit proident ut ad cillum quis velit quis aliqua ut aliquip tempor ullamco.'
+            'question': 'Comment noter les participants ?',
+            'answer': 'A la fin du projet un onglet vous conduit automatiquement sur la page de notation à votre prochaine connexion.'
         },
         {
-            'question': 'Aliqua aliquip aliquip aliquip et exercitation aute?',
-            'answer': 'Adipisicing Lorem tempor ex anim. Labore tempor laboris nostrud dolore voluptate ullamco. Fugiat ex deserunt anim minim esse velit laboris aute ea duis incididunt. Elit irure id Lorem incididunt laborum aliquip consectetur est irure sunt. Ut labore anim nisi aliqua tempor laborum nulla cillum. Duis irure consequat cillum magna cillum eiusmod ut. Et exercitation voluptate quis deserunt elit quis dolor deserunt ex ex esse ex.'
+            'question': 'Comment me déconnecter ?',
+            'answer': 'Cliquez sur SE DECONNECTER.'
         }
         ];
 

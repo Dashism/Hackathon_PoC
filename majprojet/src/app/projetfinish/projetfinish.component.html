@@ -95,6 +95,10 @@
                                             <mat-form-field class="col-xs-12">
                                                 <input matInput formControlName="level"
                                                     placeholder="Quelle est le niveau de la compétence aquise ?">
+                                                <mat-error
+                                                    *ngIf="(projectskillForm.controls['projectskillList']).controls[i].get('level').hasError('pattern')">
+                                                    Entier entre 1 et 5 uniquement !
+                                                </mat-error>
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -104,7 +108,8 @@
                                 <!-- </mat-expansion-panel> -->
                             </mat-accordion>
                             <div class="button-row text-center" fxFlex="100">
-                                <button class="add-back-btn text-right btn-submit" mat-raised-button color="black" (click)="onSubmit()">Validation</button>
+                                <button class="add-back-btn text-right btn-submit" mat-raised-button color="black"
+                                    (click)="onSubmit()">Validation</button>
                             </div>
                         </form>
                     </div>

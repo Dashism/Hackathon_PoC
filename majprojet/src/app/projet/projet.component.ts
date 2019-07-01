@@ -25,6 +25,7 @@ import { Participant } from '../_models/participant';
     styleUrls: ['./projet.component.scss']
 })
 export class ProjetComponent implements OnInit, OnDestroy {
+    coinnumber: number;
     skilldisponibility: Skill[] = [];
     dispostart: Date;
     dispoend: Date;
@@ -80,6 +81,21 @@ export class ProjetComponent implements OnInit, OnDestroy {
             });
         console.log(this.currentUser.id);
         this.skillok = '3';
+        this.dataService.getAll('agents')
+        .subscribe((data: {}) => {
+            for (let i = 0; i < 99; i++) {
+                if (JSON.stringify(data).includes('\\"AGENT' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
+                    this.dataService.get('agent', 'AGENT' + i.toString())
+                        .subscribe(data2 => {
+                            this.respbc = data2;
+                            this.agent = JSON.parse(this.respbc.response);
+                            this.coinnumber = +this.agent.coin;
+                            console.log ('debug' + this.coinnumber)
+                        });
+                    return;
+                }
+            }
+        });
     }
 
     ngOnDestroy() {

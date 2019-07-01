@@ -482,7 +482,7 @@ app.get('/api/projectskill/:projectskill_index', async function (req, res, next)
                 // Evaluate the specified transaction.
                 // queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
                 // queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
-                const result = await contract.evaluateTransaction('queryProjectskill', req.params.participant_index);
+                const result = await contract.evaluateTransaction('queryProjectskill', req.params.projectskill_index);
                 console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
                 res.status(200).json({ response: result.toString() });
         } catch (error) {
@@ -520,7 +520,7 @@ app.post('/api/addAgent/', async function (req, res, next) {
                 // Submit the specified transaction.
                 // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
                 // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-                await contract.submitTransaction('createAgent', req.body.agentid, req.body.username, req.body.coin, req.body.entity, req.body.entitypoint, req.body.point);
+                await contract.submitTransaction('createAgent', req.body.agentid, req.body.username, req.body.coin, req.body.entity, req.body.entitypoint, req.body.point, req.body.startdate, req.body.enddate);
                 console.log('Transaction has been submitted');
                 res.send('Transaction has been submitted');
                 // Disconnect from the gateway.
@@ -690,7 +690,7 @@ app.post('/api/addProjectskill/', async function (req, res, next) {
                 // Submit the specified transaction.
                 // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
                 // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-                await contract.submitTransaction('createProjectskill', req.body.projectskillid, req.body.projectname, req.body.skillname, req.body.level, req.body.grade);
+                await contract.submitTransaction('createProjectskill', req.body.projectskillid, req.body.projectname, req.body.username, req.body.skillname, req.body.level);
                 console.log('Transaction has been submitted');
                 res.send('Transaction has been submitted');
                 // Disconnect from the gateway.
@@ -728,7 +728,7 @@ app.put('/api/changeAgent/:agent_index', async function (req, res, next) {
                 // Submit the specified transaction.
                 // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
                 // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-                await contract.submitTransaction('changeAgent', req.params.agent_index, req.body.username, req.body.coin, req.body.entity, req.body.entitypoint, req.body.point);
+                await contract.submitTransaction('changeAgent', req.params.agent_index, req.body.username, req.body.coin, req.body.entity, req.body.entitypoint, req.body.point, req.body.startdate, req.body.enddate);
                 res.send('Transaction has been submitted');
                 // Disconnect from the gateway.
                 await gateway.disconnect();
@@ -827,7 +827,7 @@ app.put('/api/changeProject/:project_index', async function (req, res, next) {
                 // Submit the specified transaction.
                 // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
                 // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-                await contract.submitTransaction('changeProject', req.params.project_index, req.body.username, req.body.projectname, req.body.description, req.body.stratdate, req.body.enddate, req.body.finish);
+                await contract.submitTransaction('changeProject', req.params.project_index, req.body.username, req.body.projectname, req.body.description, req.body.startdate, req.body.enddate, req.body.finish);
                 res.send('Transaction has been submitted');
                 // Disconnect from the gateway.
                 await gateway.disconnect();
@@ -893,7 +893,44 @@ app.put('/api/changeProjectskill/:projectskill_index', async function (req, res,
                 // Submit the specified transaction.
                 // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
                 // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-                await contract.submitTransaction('changeParticipant', req.params.projectskill_index, req.body.projectname, req.body.skillname, req.body.level, req.body.grade);
+                await contract.submitTransaction('changeParticipant', req.params.projectskill_index, req.body.projectname, req.body.skillname, req.body.level);
+                res.send('Transaction has been submitted');
+                // Disconnect from the gateway.
+                await gateway.disconnect();
+        } catch (error) {
+                console.error(`Failed to submit transaction: ${error}`);
+                process.exit(1);
+        }
+});
+
+
+
+
+app.delete('/api/delete/:object_index', async function (req, res) {
+        try {
+                // Create a new file system based wallet for managing identities.
+                const walletPath = path.join(process.cwd(), 'wallet');
+                const wallet = new FileSystemWallet(walletPath);
+                console.log(`Wallet path: ${walletPath}`);
+                // Check to see if we've already enrolled the user.
+                const userExists = await wallet.exists('user1');
+                if (!userExists) {
+                        console.log('An identity for the user "user1" does not exist in the wallet');
+                        console.log('Run the registerUser.js application before retrying');
+                        return;
+                }
+                // Create a new gateway for connecting to our peer node.
+                const gateway = new Gateway();
+                await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
+                // Get the network (channel) our contract is deployed to.
+                const network = await gateway.getNetwork('mychannel');
+                // Get the contract from the network.
+                const contract = network.getContract('fabcar');
+                // Submit the specified transaction.
+                // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
+                // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
+                await contract.submitTransaction('delete', req.params.object_index);
+                console.log('Transaction has been submitted');
                 res.send('Transaction has been submitted');
                 // Disconnect from the gateway.
                 await gateway.disconnect();
@@ -909,145 +946,4 @@ app.put('/api/changeProjectskill/:projectskill_index', async function (req, res,
 
 app.listen(3000, () => {
         console.log("Server running on port 3000");
-});
-
-
-
-
-
-app.get('/api/queryallcars', async function (req, res) {
-        try {
-                // Create a new file system based wallet for managing identities.
-                const walletPath = path.join(process.cwd(), 'wallet');
-                const wallet = new FileSystemWallet(walletPath);
-                console.log(`Wallet path: ${walletPath}`);
-                // Check to see if we've already enrolled the user.
-                const userExists = await wallet.exists('user1');
-                if (!userExists) {
-                        console.log('An identity for the user "user1" does not exist in the wallet');
-                        console.log('Run the registerUser.js application before retrying');
-                        return;
-                }
-                // Create a new gateway for connecting to our peer node.
-                const gateway = new Gateway();
-                await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
-                // Get the network (channel) our contract is deployed to.
-                const network = await gateway.getNetwork('mychannel');
-                // Get the contract from the network.
-                const contract = network.getContract('fabcar');
-                // Evaluate the specified transaction.
-                // queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
-                // queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
-                const result = await contract.evaluateTransaction('queryAllCars');
-                console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
-                res.status(200).json({ response: result.toString() });
-        } catch (error) {
-                console.error(`Failed to evaluate transaction: ${error}`);
-                res.status(500).json({ error: error });
-                process.exit(1);
-        }
-});
-
-
-
-app.get('/api/query/:car_index', async function (req, res) {
-        try {
-                // Create a new file system based wallet for managing identities.
-                const walletPath = path.join(process.cwd(), 'wallet');
-                const wallet = new FileSystemWallet(walletPath);
-                console.log(`Wallet path: ${walletPath}`);
-                // Check to see if we've already enrolled the user.
-                const userExists = await wallet.exists('user1');
-                if (!userExists) {
-                        console.log('An identity for the user "user1" does not exist in the wallet');
-                        console.log('Run the registerUser.js application before retrying');
-                        return;
-                }
-                // Create a new gateway for connecting to our peer node.
-                const gateway = new Gateway();
-                await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
-                // Get the network (channel) our contract is deployed to.
-                const network = await gateway.getNetwork('mychannel');
-                // Get the contract from the network.
-                const contract = network.getContract('fabcar');
-                // Evaluate the specified transaction.
-                // queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
-                // queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
-                const result = await contract.evaluateTransaction('queryCar', req.params.car_index);
-                console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
-                res.status(200).json({ response: result.toString() });
-        } catch (error) {
-                console.error(`Failed to evaluate transaction: ${error}`);
-                res.status(500).json({ error: error });
-                process.exit(1);
-        }
-});
-
-
-app.post('/api/addcar/', async function (req, res) {
-        try {
-                // Create a new file system based wallet for managing identities.
-                const walletPath = path.join(process.cwd(), 'wallet');
-                const wallet = new FileSystemWallet(walletPath);
-                console.log(`Wallet path: ${walletPath}`);
-                // Check to see if we've already enrolled the user.
-                const userExists = await wallet.exists('user1');
-                if (!userExists) {
-                        console.log('An identity for the user "user1" does not exist in the wallet');
-                        console.log('Run the registerUser.js application before retrying');
-                        return;
-                }
-                // Create a new gateway for connecting to our peer node.
-                const gateway = new Gateway();
-                await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
-                // Get the network (channel) our contract is deployed to.
-                const network = await gateway.getNetwork('mychannel');
-                // Get the contract from the network.
-                const contract = network.getContract('fabcar');
-                // Submit the specified transaction.
-                // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
-                // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-                await contract.submitTransaction('createCar', req.body.carid, req.body.make, req.body.model, req.body.colour, req.body.owner);
-                console.log('Transaction has been submitted');
-                res.send('Transaction has been submitted');
-                // Disconnect from the gateway.
-                await gateway.disconnect();
-        } catch (error) {
-                console.error(`Failed to submit transaction: ${error}`);
-                process.exit(1);
-        }
-});
-
-app.put('/api/changeowner/:car_index', async function (req, res) {
-        try {
-                // Create a new file system based wallet for managing identities.
-                const walletPath = path.join(process.cwd(), 'wallet');
-                const wallet = new FileSystemWallet(walletPath);
-                console.log(`Wallet path: ${walletPath}`);
-                // Check to see if we've already enrolled the user.
-                const userExists = await wallet.exists('user1');
-                if (!userExists) {
-                        console.log('An identity for the user "user1" does not exist in the wallet');
-                        console.log('Run the registerUser.js application before retrying');
-                        return;
-                }
-                // Create a new gateway for connecting to our peer node.
-                const gateway = new Gateway();
-                await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
-                // Get the network (channel) our contract is deployed to.
-                const network = await gateway.getNetwork('mychannel');
-                // Get the contract from the network.
-                const contract = network.getContract('fabcar');
-                // Submit the specified transaction.
-                // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
-                // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-                await contract.submitTransaction('changeCarOwner', req.params.car_index, JSON.stringify(req.body.owner));
-                console.log('Transaction has been submitted');
-                res.send('Transaction has been submitted');
-                // Disconnect from the gateway.
-                await gateway.disconnect();
-        } catch (error) {
-                console.error(`Failed to submit transaction: ${error}`);
-                process.exit(1);
-        }
 });

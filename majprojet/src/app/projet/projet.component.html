@@ -137,23 +137,28 @@
                                     (click)="onSubmit()">Vérification</button>
                             </div> -->
                             <br>
-                            <div *ngIf="skillok === '2'" class="button-row text-center" fxFlex="100">
-                                <button mat-raised-button color="warn" (click)="reset3()">Validation</button>
-                                <h4 style="color:red;">Pas assez de compétences disponibles, recliquez sur le bouton
-                                    pour recommencer</h4>
-                            </div>
+                            <div *ngIf="coinnumber > 0" class="button-row text-center" fxFlex="100">
+                                <div *ngIf="skillok === '2'" class="button-row text-center" fxFlex="100">
+                                    <button mat-raised-button color="warn" (click)="reset3()">Validation</button>
+                                    <h4 style="color:red;">Pas assez de compétences disponibles, recliquez sur le bouton
+                                        pour recommencer</h4>
+                                </div>
 
-                            <div *ngIf="skillok === '3'" class="button-row text-center" fxFlex="100">
-                                <button mat-raised-button color="primary"
-                                    (click)="checkifskillspresent()">Validation</button>
-                            </div>
+                                <div *ngIf="skillok === '3'" class="button-row text-center" fxFlex="100">
+                                    <button mat-raised-button color="primary"
+                                        (click)="checkifskillspresent()">Validation</button>
+                                </div>
 
-                            <div *ngIf="skillok === '1'" class="button-row text-center" fxFlex="100">
-                                <button mat-raised-button color="accent" (click)="onSubmit()">Validation</button>
-                                <h4 style="color:blue;">Les compétences sont disponibles, recliquez sur le bouton
-                                    pour valider</h4>
+                                <div *ngIf="skillok === '1'" class="button-row text-center" fxFlex="100">
+                                    <button mat-raised-button color="accent" (click)="onSubmit()">Validation</button>
+                                    <h4 style="color:blue;">Les compétences sont disponibles, recliquez sur le bouton
+                                        pour valider</h4>
+                                </div>
                             </div>
-
+                            <div *ngIf="coinnumber === 0" class="button-row text-center" fxFlex="100">
+                                <h3 style="color:red;"><b> Vous n'avez plus d'argent virtuel, participez à des projets pour
+                                        récupérer des points.</b></h3>
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -106,9 +106,19 @@
                                         <div [formGroupName]="i"
                                             *ngFor="let skill of form.controls.skillset.controls, let i= index"
                                             [attr.data-index]="i">
-                                            <mat-form-field class="col-xs-5">
+                                            <!-- <mat-form-field class="col-xs-5">
                                                 <input matInput formControlName="skillname"
                                                     placeholder="Nom de la compétence" required>
+                                            </mat-form-field> -->
+
+                                            <mat-form-field class="col-xs-5">
+                                                <mat-select placeholder="Compétences disponibles"
+                                                    formControlName="skillname" required>
+                                                    <mat-option *ngFor="let skill of skillchoice"
+                                                        [value]="skill.bskillname">
+                                                        {{skill.bskillname}}
+                                                    </mat-option>
+                                                </mat-select>
                                             </mat-form-field>
 
                                             <mat-form-field>
@@ -156,7 +166,8 @@
                                 </div>
                             </div>
                             <div *ngIf="coinnumber === 0" class="button-row text-center" fxFlex="100">
-                                <h3 style="color:red;"><b> Vous n'avez plus d'argent virtuel, participez à des projets pour
+                                <h3 style="color:red;"><b> Vous n'avez plus d'argent virtuel, participez à des projets
+                                        pour
                                         récupérer des points.</b></h3>
                             </div>
                         </form>

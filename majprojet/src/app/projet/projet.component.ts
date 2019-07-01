@@ -27,6 +27,7 @@ import { Participant } from '../_models/participant';
 export class ProjetComponent implements OnInit, OnDestroy {
     coinnumber: number;
     skilldisponibility: Skill[] = [];
+    skillchoice: Skill[] = [];
     dispostart: Date;
     dispoend: Date;
     agent: Agent;
@@ -82,20 +83,33 @@ export class ProjetComponent implements OnInit, OnDestroy {
         console.log(this.currentUser.id);
         this.skillok = '3';
         this.dataService.getAll('agents')
-        .subscribe((data: {}) => {
-            for (let i = 0; i < 99; i++) {
-                if (JSON.stringify(data).includes('\\"AGENT' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
-                    this.dataService.get('agent', 'AGENT' + i.toString())
-                        .subscribe(data2 => {
-                            this.respbc = data2;
-                            this.agent = JSON.parse(this.respbc.response);
-                            this.coinnumber = +this.agent.coin;
-                            console.log ('debug' + this.coinnumber)
-                        });
-                    return;
+            .subscribe((data: {}) => {
+                for (let i = 0; i < 99; i++) {
+                    if (JSON.stringify(data).includes('\\"AGENT' + i.toString() + '\\", \\"Record\\":{\\"ausername\\":\\"' + this.currentUser.username + '\\"')) {
+                        this.dataService.get('agent', 'AGENT' + i.toString())
+                            .subscribe(data2 => {
+                                this.respbc = data2;
+                                this.agent = JSON.parse(this.respbc.response);
+                                this.coinnumber = +this.agent.coin;
+                                console.log('debug' + this.coinnumber)
+                            });
+                        return;
+                    }
                 }
-            }
-        });
+            });
+        for (let l = 0; l < 99; l++) {
+            this.dataService.get('skill', 'SKILL' + l.toString())
+                .subscribe(data2 => {
+                    if (!JSON.stringify(data2).includes(this.currentUser.username)) {
+                        this.respbc = data2;
+                        this.skill = new Skill();
+                        this.skill = JSON.parse(this.respbc.response);
+                        this.skillchoice.push(this.skill);
+                        this.skillchoice = this.skillchoice.filter((el, i, a) => i === a.indexOf(el));
+                        console.log(this.skillchoice);
+                    }
+                });
+        }
     }
 
     ngOnDestroy() {
@@ -165,7 +179,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
 
         this.dataService.getAll('projects')
             .subscribe((data: {}) => {
-                for (let i = 0; i < 13; i++) {
+                for (let i = 0; i < 99; i++) {
                     if (!JSON.stringify(data).includes('PROJECT' + i.toString())) {
                         this.project = new Project();
                         this.project.projectid = 'PROJECT' + i.toString();

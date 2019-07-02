@@ -1,0 +1,62 @@
+<form [formGroup]="diplomaForm">
+    <mat-accordion formArrayName="diplomaList">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <strong>Tenants</strong>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div [formGroupName]="i" *ngFor="let diploma of diplomalist;let i = index" [attr.data-index]="i">
+                <mat-form-field>
+                    <input matInput [(ngModel)]="diploma.diplomaname" formControlName="diplomaname"
+                        placeholder="Nom du diplome" required>
+                </mat-form-field>
+
+                <button mat-icon-button (click)="deleteDiploma(i)">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </div>
+            <button mat-button (click)="addDiploma()">
+                <mat-icon>add_circle_outline</mat-icon>
+            </button>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+</form>
+
+<form [formGroup]="skillForm">
+    <mat-accordion formArrayName="skillList" class="col-md-12 col-xs-12">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <strong>Tenants</strong>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div [formGroupName]="i" *ngFor="let skill of skilllist;let i = index" [attr.data-index]="i">
+                <mat-form-field class="col-xs-5">
+                    <input matInput [(ngModel)]="skill.bskillname" formControlName="skillname"
+                        placeholder="Nom de la compétence" required>
+                </mat-form-field>
+
+
+                <mat-form-field>
+                    <input matInput [(ngModel)]="skill.level" formControlName="level" placeholder="Niveau de 1 à 5"
+                        required>
+                    <mat-error *ngIf="(skillForm.controls['skillList']).controls[i].get('level').hasError('pattern')">
+                        Entier entre 1 et 5 uniquement !
+                    </mat-error>
+                </mat-form-field>
+
+                <button mat-icon-button (click)="deleteSkill(i)">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </div>
+            <button mat-button (click)="addSkill()">
+                <mat-icon>add_circle_outline</mat-icon>
+            </button>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+</form>

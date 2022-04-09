@@ -46,7 +46,7 @@
     "igniteui-angular": "8.0.2",
     "jquery": "3.4.1",
     "lodash": ">=4.17.10",
-    "moment": "2.22.2",
+    "moment": "2.29.2",
     "ng-simple-slideshow": "1.2.5",
     "ng2-charts": "1.6.0",
     "ngrx-store-freeze": "0.2.4",
